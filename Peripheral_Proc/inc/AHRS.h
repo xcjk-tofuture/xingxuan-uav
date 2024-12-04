@@ -148,4 +148,6 @@ void IMU_Temperature_Control(float target);  //IMUºãÎÂ¿ØÖÆ  ÊäÈëÎÂ¶È
 float invSqrt(float x);
 float DATA_Trans(u8 Data_1,u8 Data_2,u8 Data_3,u8 Data_4);
 
+void Cold_Start_ARHS(_imuData_all imu, uav_attitude *attitude);
+
 #endif

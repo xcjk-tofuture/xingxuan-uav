@@ -52,6 +52,7 @@ u8 AK8975Flag = 1;
 u8 SPL06Flag = 1;
 u8 IMUTemperatureFlag = 1;
 
+u32 sensorTimeCount = 0;
 void Sensor_Data_Task_Proc(void const * argument)
 {
 	osDelay(2000);
@@ -66,13 +67,23 @@ void Sensor_Data_Task_Proc(void const * argument)
 
  for(;;)
 	{
-		vTaskDelayUntil(&xLastWakeTime, UPDATE_TIME); //绝对延时
-	#if !EXTERN_IMU
-		IMU_Temperature_Control(40);
 		
+		vTaskDelayUntil(&xLastWakeTime, 1); //绝对延时
+		sensorTimeCount ++;
+	#if !EXTERN_IMU
+	
+	if(sensorTimeCount % 3 == 0)
+	{	
+		IMU_Temperature_Control(40);
 		ReadAccTemperature(&imudata_all.f_temperature);
 		ReadAccData(&test_acc);
 		ReadGyroData(&test_gyro);
+	  if(sensorTimeCount == 30)
+			Cold_Start_ARHS(imudata_all, &attitude_t);
+	}
+		
+	if(sensorTimeCount % UPDATE_TIME == 0)
+	{
 		ReadMagData(&test_mag);
 		
 		Spl0601Get(&imudata_all.Pressure);
@@ -93,6 +104,9 @@ void Sensor_Data_Task_Proc(void const * argument)
 		//printf("CALLING... \r\n");
 		Sensor_Calibration(&imudata_all);
 	 }
+	
+	}
+
 
 		 //传感器
 		//FlashTest = W25QXX_ReadID();
@@ -348,9 +362,9 @@ float invSqrt(float x)
 	return y;
 }
 
-#define Kp 5.f                         // proportional gain governs rate of convergence to accelerometer/magnetometer
+#define Kp 6.f                         // proportional gain governs rate of convergence to accelerometer/magnetometer
                                          //比例增益控制加速度计，磁力计的收敛速率
-#define Ki 0.005f                        // integral gain governs rate of convergence of gyroscope biases  
+#define Ki 0.008f                        // integral gain governs rate of convergence of gyroscope biases  
                                          //积分增益控制陀螺偏差的收敛速度
 #define halfT UPDATE_TIME / 2000.f                     // half the sample period 采样周期的一半
 
@@ -618,7 +632,7 @@ void AHRS_Kalman_Update(_imuData_all imu, uav_attitude *attitude)
 	//step6 - Posterior estimation
 	//step7 - Posteriori estimation error covariance
 	
-  attitude->yaw = yaw_k * SEC2DEG;
+  attitude->yaw = yaw_z * SEC2DEG;
 	attitude->pitch = pitch_k * SEC2DEG;   //T13
 	attitude->roll = roll_k * SEC2DEG;  // T23/T33
 
@@ -626,4 +640,41 @@ void AHRS_Kalman_Update(_imuData_all imu, uav_attitude *attitude)
 
 
 }	
+
+
+void Cold_Start_ARHS(_imuData_all imu, uav_attitude *attitude)
+{
+  float roll,pitch,yaw = 0;
+
+
+	float ax = imu.acc.x;
+	float ay = imu.acc.y;
+	float az = imu.acc.z;
+	
+	float gx = imu.gyro.roll;
+	float gy = imu.gyro.pitch;
+	float gz = imu.gyro.yaw;
+	
+	float mbx = imu.mag.x;
+	float mby = imu.mag.y;
+	float mbz = imu.mag.z;
+	
+	float mZx, mZy, mZz = 0;
+	
+	roll = atan((ay) / (az));
+  pitch = -1 * atan((ax) / sqrt(ay * ay  + az * az));
+	
+	mZx = cos(pitch) * mbx + sin(pitch) * sin(roll) * mby + 
+								sin(pitch) * cos(roll) * mbz;   //先绕roll 再绕pitch
+	mZy = cos(roll) * mby - sin(roll) * mbz;
+	
+
+	yaw = atan(mZy / mZx);
+	
+	
+	attitude->yaw = yaw * SEC2DEG;
+	attitude->pitch = pitch * SEC2DEG;   //T13
+	attitude->roll = roll * SEC2DEG;  // T23/T33
+
+}
 

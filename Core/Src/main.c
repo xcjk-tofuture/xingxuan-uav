@@ -261,6 +261,20 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 
 
 }
+
+
+void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+{
+	if(huart == &huart6)
+	{
+//执行HAL_UART_ErrorCallback时，还处于lock，需先unlock，
+//因为HAL_UART_Receive_IT执行时需判断如果是lock则直接返回BUSY
+		__HAL_UNLOCK(huart);		
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart6, SbusRxBuf, 100);	//SBUS接受 串口通信初始化
+	}
+
+
+}
 //void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 //{
 

@@ -39,6 +39,8 @@ void Sbus_Uart6_Task_Proc(void const * argument)
 //		printf("channel_2: %f \r\n", Sbus_To_Range(SBUS_CH.CH2, 1000, 2000));
 //		printf("channel_3: %f \r\n", Sbus_To_Range(SBUS_CH.CH3, 1000, 2000));
 //		printf("channel_4: %f \r\n", Sbus_To_Range(SBUS_CH.CH4, 1000, 2000));
+//		printf("channel_5: %f \r\n", Sbus_To_Range(SBUS_CH.CH5, 1000, 2000));
+//		printf("channel_8: %f \r\n", Sbus_To_Range(SBUS_CH.CH8, 1000, 2000));
 //	printf("channel_2: %d \r\n", SBUS_CH.CH2);
 //	printf("channel_3: %d \r\n", SBUS_CH.CH3);
 //	printf("channel_4: %d \r\n", SBUS_CH.CH4);

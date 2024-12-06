@@ -204,7 +204,7 @@ void MX_FREERTOS_Init(void) {
   OLEDTaskHandle = osThreadCreate(osThread(OLEDTask), NULL);
 
   /* definition and creation of SensorDataTask */
-  osThreadDef(SensorDataTask, Sensor_Data_Task_Proc, osPriorityNormal, 0, 512);
+  osThreadDef(SensorDataTask, Sensor_Data_Task_Proc, osPriorityLow, 0, 512);
   SensorDataTaskHandle = osThreadCreate(osThread(SensorDataTask), NULL);
 
   /* definition and creation of FlashTask */

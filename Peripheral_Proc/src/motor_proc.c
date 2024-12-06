@@ -2,7 +2,7 @@
 
 
 extern SBUS_CH_CAL_Struct CAL_SBUS_CH;
-extern _ahrs_data ahrs_data;
+extern _ahrs_data attitude_t;
 
 osThreadId MotorTaskHandle;
 
@@ -26,12 +26,17 @@ void Motor_Task_Proc(void const * argument)
   {
 		if(CAL_SBUS_CH.Connect_State == 1)
     {
+			//printf("State :%d\r\n", uavSafeFlag);
 			switch (uavSafeFlag){
 				case LOCKED:
 					TIM1->CCR1 = 1000;
 					TIM1->CCR2 = 1000;
 					TIM1->CCR3 = 1000;
 					TIM1->CCR4 = 1000;	
+//				 TIM1->CCR1 = CAL_SBUS_CH.CAL_CH3;
+//				 TIM1->CCR2 = CAL_SBUS_CH.CAL_CH3;
+//				 TIM1->CCR3 = CAL_SBUS_CH.CAL_CH3;
+//				 TIM1->CCR4 = CAL_SBUS_CH.CAL_CH3;
 					break;
 				case UNLOCKED:
 					TIM1->CCR1 = 1050;
@@ -41,14 +46,14 @@ void Motor_Task_Proc(void const * argument)
 					break;
 				case FLYING:
 
-					uav_control_data.rollSpeedOut = (s16)PID_Control(&uav_control_data.rollPid, &uav_control_data.rollData, 5, 0, (CAL_SBUS_CH.CAL_CH1 - 1500)  / 12.0f, ahrs_data.roll, 1000);
-					uav_control_data.pitchSpeedOut = (s16)PID_Control(&uav_control_data.pitchPid, &uav_control_data.pitchData, 5, 0, (CAL_SBUS_CH.CAL_CH2 - 1500)  / 12.0f, ahrs_data.pitch, 1000);
+					uav_control_data.rollSpeedOut = (s16)PID_Control(&uav_control_data.rollPid, &uav_control_data.rollData, 5, 0, (CAL_SBUS_CH.CAL_CH1 - 1500)  / 12.0f, attitude_t.roll, 1000);
+					uav_control_data.pitchSpeedOut = (s16)PID_Control(&uav_control_data.pitchPid, &uav_control_data.pitchData, 5, 0, (CAL_SBUS_CH.CAL_CH2 - 1500)  / 12.0f, attitude_t.pitch, 1000);
 					
 				
-					uav_control_data.rollOut = (s16)PID_Control(&uav_control_data.rollSpeedPid, &uav_control_data.rollSpeedData, 5, 0, uav_control_data.rollSpeedOut , ahrs_data.rollSpeed, 1000);
-					uav_control_data.pitchOut = (s16)PID_Control(&uav_control_data.pitchSpeedPid, &uav_control_data.pitchSpeedData, 5, 0, uav_control_data.pitchSpeedOut , ahrs_data.pitchSpeed, 1000);
+					uav_control_data.rollOut = (s16)PID_Control(&uav_control_data.rollSpeedPid, &uav_control_data.rollSpeedData, 5, 0, uav_control_data.rollSpeedOut , attitude_t.rollSpeed, 1000);
+					uav_control_data.pitchOut = (s16)PID_Control(&uav_control_data.pitchSpeedPid, &uav_control_data.pitchSpeedData, 5, 0, uav_control_data.pitchSpeedOut , attitude_t.pitchSpeed, 1000);
 					
-					uav_control_data.yawOut = (s16)PID_Control(&uav_control_data.yawPid, &uav_control_data.yawData, 5, 0, ((CAL_SBUS_CH.CAL_CH4 - 1500)  / 12.0f) * 0.01, ahrs_data.yawSpeed, 1000);
+					uav_control_data.yawOut = (s16)PID_Control(&uav_control_data.yawPid, &uav_control_data.yawData, 5, 0, ((CAL_SBUS_CH.CAL_CH4 - 1500)  / 12.0f) * 0.01, attitude_t.yawSpeed, 1000);
 				
 					if(CAL_SBUS_CH.CAL_CH3 > 1100)
 					{
@@ -160,7 +165,7 @@ u8 lock_unlock_proc()				//上锁解锁处理
 		CAL_SBUS_CH.CAL_CH3 < 1050 && CAL_SBUS_CH.CAL_CH3 > 990 &&
 		CAL_SBUS_CH.CAL_CH4 < 2010 && CAL_SBUS_CH.CAL_CH4 > 1950)
 	{
-		printf("unlockCount :%d\r\n", unlockCount);
+		
 		unlockCount++;
 		return 1;
 	}

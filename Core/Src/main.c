@@ -254,7 +254,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 		//sprintf((char *)TxBufTemp, "hello world");
 		//HAL_UART_Transmit(&huart3, SbusRxBuf,Size, 50);
 		Sbus_Uart6_IDLE_Proc(Size);
-    HAL_UART_Transmit_DMA(&huart1, SbusRxBuf, Size);
+    //HAL_UART_Transmit_DMA(&huart1, SbusRxBuf, Size);
 		HAL_UARTEx_ReceiveToIdle_DMA(&huart6, SbusRxBuf, 100);
 		
 	}

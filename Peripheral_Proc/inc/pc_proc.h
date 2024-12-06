@@ -11,7 +11,7 @@
 #include "usart.h"
 #include "vector3.h"
 #include "AHRS.h"
-
+#include "stdio.h"
 
 #define BYTE0(dwTemp)     (*(char *)(&dwTemp))
 #define BYTE1(dwTemp)     (*((char *)(&dwTemp) +1))

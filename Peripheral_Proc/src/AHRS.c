@@ -13,7 +13,7 @@
 #define EXTERN_IMU 0
 
 #define SENSORS_ENABLE_SPL06 1;
-#define UPDATE_TIME 5
+#define UPDATE_TIME 10
 
 
 #define CALIBRATION_COUNT 500 //决定用多少个值去做校准
@@ -32,10 +32,10 @@ osThreadId SensorDataTaskHandle;
 acc_raw_data_t test_acc;
 gyro_raw_data_t test_gyro;
 mag_raw_data_t test_mag;
-uav_attitude attitude_t;
+
 
 _imuData_all imudata_all;
-_ahrs_data ahrs_data;
+_ahrs_data attitude_t;
 
 
 
@@ -64,7 +64,6 @@ void Sensor_Data_Task_Proc(void const * argument)
 	static TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount();
 
-
  for(;;)
 	{
 		
@@ -78,8 +77,7 @@ void Sensor_Data_Task_Proc(void const * argument)
 		ReadAccTemperature(&imudata_all.f_temperature);
 		ReadAccData(&test_acc);
 		ReadGyroData(&test_gyro);
-	  if(sensorTimeCount == 30)
-			Cold_Start_ARHS(imudata_all, &attitude_t);
+
 	}
 		
 	if(sensorTimeCount % UPDATE_TIME == 0)
@@ -90,8 +88,6 @@ void Sensor_Data_Task_Proc(void const * argument)
 		
 		//printf("%0.1f  %0.1f  %0.1f \r\n", test_mag.x, test_mag.y, test_mag.z);
 		//printf("%0.1f  %0.1f  %0.1f \r\n", attitude_t.roll, attitude_t.pitch, attitude_t.yaw);
-		
-		
 		IMU_Update(test_acc, test_gyro, test_mag, &imudata_all);
 	 if(!(AccCalFlag || GyroCalFlag))	
 	 {
@@ -103,6 +99,8 @@ void Sensor_Data_Task_Proc(void const * argument)
 	 {	
 		//printf("CALLING... \r\n");
 		Sensor_Calibration(&imudata_all);
+		if(sensorTimeCount == CALIBRATION_COUNT * UPDATE_TIME)
+			Cold_Start_ARHS(imudata_all, &attitude_t);
 	 }
 	
 	}
@@ -244,7 +242,7 @@ void Acc_LMS_Calibration(_imuData_all* imu, Vector3f_t * offset, Vector3f_t * sc
 	i++;
 	if(i == 6)
 	{
-		LMS_Fitting(raw, offset, scale);
+		//LMS_Fitting(raw, offset, scale);
 		AccCalFlag = 0;
 	}
 	
@@ -386,6 +384,9 @@ void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _i
 	LPF2ndData_t LPF2_ACC;
 	Vector3f_t LPF2_ACC_Data;
 	
+	LPF2ndData_t LPF2_MAG;
+	Vector3f_t LPF2_MAG_Data;
+	
 	LPF2_GYRO_Data.x = gyro.roll - imu->gyrobias.x;
 	LPF2_GYRO_Data.y = gyro.pitch - imu->gyrobias.y;
 	LPF2_GYRO_Data.z = gyro.yaw - imu->gyrobias.z;
@@ -393,6 +394,8 @@ void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _i
 	LPF2_ACC_Data.x = acc.x;
 	LPF2_ACC_Data.y = acc.y;
 	LPF2_ACC_Data.z = acc.z;
+	
+
 	
 	LowPassFilter2ndFactorCal(UPDATE_TIME, 50, &LPF2_GYRO);
 	LPF2_GYRO_Data = LowPassFilter2nd(&LPF2_GYRO, LPF2_GYRO_Data);     //陀螺仪二阶低通滤波 截止频率50HZ
@@ -413,7 +416,7 @@ void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _i
 	imu->mag.z = mag.z;
 }
 
-void AHRS_Mahony_Update(_imuData_all imu, uav_attitude *attitude)
+void AHRS_Mahony_Update(_imuData_all imu, _ahrs_data *attitude)
 {	
 	u8 i;
 	float matrix[9] = {1.f, 0.0f, 0.0f, 0.0f, 1.f, 0.0f, 0.0f, 0.0f, 1.f};
@@ -430,7 +433,10 @@ void AHRS_Mahony_Update(_imuData_all imu, uav_attitude *attitude)
 	float wx, wy, wz;
 	float norm;			//求模变量		
 
-	
+	q0 = attitude->q0;
+	q1 = attitude->q1;
+	q2 = attitude->q2;
+	q3 = attitude->q3;
 	
 	float q0q0 = q0 * q0;
 	float q0q1 = q0 * q1;
@@ -483,9 +489,9 @@ void AHRS_Mahony_Update(_imuData_all imu, uav_attitude *attitude)
 	wz = (2.f * (q1q3 + q0q2)) * bx + (q0q0 - q1q1 - q2q2 + q3q3) * bz;
 	
 	
-	ex = (ay * vz - az * vy) + (my * wz - mz * wy);
-	ey = (az * vx - ax * vz) + (mz * wx - mx * wz);
-	ez = (ax * vy - ay * vx) + (mx * wy - my * wx);  //叉乘求误差
+	ex = (ay * vz - az * vy); //(my * wz - mz * wy);
+	ey = (az * vx - ax * vz); //(mz * wx - mx * wz);
+	ez = (ax * vy - ay * vx); //(mx * wy - my * wx);  //叉乘求误差
 	
 	
 	exInt = exInt + ex * Ki;
@@ -527,6 +533,10 @@ void AHRS_Mahony_Update(_imuData_all imu, uav_attitude *attitude)
 	attitude->yaw = -atan2f(matrix[1], matrix[0]) * SEC2DEG; // T12/T11
 	attitude->pitch = asinf(matrix[2]) *SEC2DEG;   //T13
 	attitude->roll = atan2f(matrix[5], matrix[8]) * SEC2DEG;  // T23/T33
+	attitude->q0 = q0 ;
+	attitude->q1 = q1 ;
+	attitude->q2 = q2 ;
+	attitude->q3 = q3 ;
 
 }
 
@@ -534,7 +544,7 @@ void AHRS_Mahony_Update(_imuData_all imu, uav_attitude *attitude)
 
 #define allT UPDATE_TIME / 1000.f                     // half the sample period 采样周期的一半
 
-void AHRS_Kalman_Update(_imuData_all imu, uav_attitude *attitude)
+void AHRS_Kalman_Update(_imuData_all imu, _ahrs_data *attitude)
 {
 	 
   float ax = imu.acc.x;
@@ -632,7 +642,7 @@ void AHRS_Kalman_Update(_imuData_all imu, uav_attitude *attitude)
 	//step6 - Posterior estimation
 	//step7 - Posteriori estimation error covariance
 	
-  attitude->yaw = yaw_z * SEC2DEG;
+  attitude->yaw = yaw_k * SEC2DEG;
 	attitude->pitch = pitch_k * SEC2DEG;   //T13
 	attitude->roll = roll_k * SEC2DEG;  // T23/T33
 
@@ -642,7 +652,7 @@ void AHRS_Kalman_Update(_imuData_all imu, uav_attitude *attitude)
 }	
 
 
-void Cold_Start_ARHS(_imuData_all imu, uav_attitude *attitude)
+void Cold_Start_ARHS(_imuData_all imu, _ahrs_data *attitude)
 {
   float roll,pitch,yaw = 0;
 
@@ -672,9 +682,37 @@ void Cold_Start_ARHS(_imuData_all imu, uav_attitude *attitude)
 	yaw = atan(mZy / mZx);
 	
 	
-	attitude->yaw = yaw * SEC2DEG;
+	
+	
+	attitude->yaw = 0;
 	attitude->pitch = pitch * SEC2DEG;   //T13
 	attitude->roll = roll * SEC2DEG;  // T23/T33
+	
+	// 将角度转换为弧度
+	double half_roll = roll * 0.5;
+	double half_pitch = pitch * 0.5;
+	double half_yaw = yaw * 0.5;
+
+
+	// 计算三角函数值
+	double sin_r = sin(half_roll);
+	double cos_r = cos(half_roll);
+	double sin_p = sin(half_pitch);
+	double cos_p = cos(half_pitch);
+	double sin_y = sin(half_yaw);
+	double cos_y = cos(half_yaw);
+
+	// 计算四元数
+	attitude->q0 = cos_r * cos_p * cos_y - sin_r * sin_p * sin_y;
+	attitude->q1 = sin_r * cos_p * cos_y + cos_r * sin_p * sin_y;
+	attitude->q2 = cos_r * sin_p * cos_y - sin_r * cos_p * sin_y;
+	attitude->q3 = cos_r * cos_p * sin_y + sin_r * sin_p * cos_y;
+
+//	// 计算四元数
+//	attitude->q0 = cos_r * cos_p * cos_y + sin_r * sin_p * sin_y;
+//	attitude->q1  = sin_r * cos_p * cos_y - cos_r * sin_p * sin_y;
+//	attitude->q2  = cos_r * sin_p * cos_y + sin_r * cos_p * sin_y;
+//	attitude->q3  = cos_r * cos_p * sin_y - sin_r * sin_p * cos_y;
 
 }
 

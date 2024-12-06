@@ -41,9 +41,9 @@ extern SPI_HandleTypeDef hspi2;
 
 void MX_SPI1_Init(void);
 void MX_SPI2_Init(void);
-u8 SPI_SingleWirteAndRead(u8 Spix, u8 TxData);
-/* USER CODE BEGIN Prototypes */
 
+/* USER CODE BEGIN Prototypes */
+u8 SPI_SingleWirteAndRead(u8 Spix, u8 TxData);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

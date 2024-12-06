@@ -36,7 +36,7 @@
 // extern acc_raw_data_t test_acc;
 // extern gyro_raw_data_t test_gyro;
 extern _imuData_all imudata_all;
-extern uav_attitude attitude_t;
+extern _ahrs_data attitude_t;
 
 
 

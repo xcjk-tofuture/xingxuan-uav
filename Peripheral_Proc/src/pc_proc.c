@@ -11,8 +11,8 @@ extern u8 Bmi088Init_Flag;    //bmi088初始化
 extern u8 AK8975Flag;    //AK8975初始化
 extern u8 SPL06Flag;    //AK8975初始化
 extern _imuData_all imudata_all;
-extern uav_attitude attitude_t;
-extern _ahrs_data ahrs_data;
+
+extern _ahrs_data attitude_t;
 void PC_Task_Proc(void const * argument)
 {
   /* USER CODE BEGIN PC_Task_Proc */

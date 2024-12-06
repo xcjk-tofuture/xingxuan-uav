@@ -64,13 +64,7 @@ typedef struct
 	
 } _imuData_all;
 
-typedef struct
-{
-	float roll;
-	float pitch;
-	float yaw;
-	
-} uav_attitude;
+
 
 
 typedef struct _AHRS_DATA
@@ -126,8 +120,8 @@ void ImuDataCalcu(u8 ins_calibrated,vec3_f gyrOffset,vec3_f accOffset,float IEM[
 
 void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _imuData_all* imu);
 
-void AHRS_Mahony_Update(_imuData_all imu, uav_attitude *attitude);
-void AHRS_Kalman_Update(_imuData_all imu, uav_attitude *attitude);
+void AHRS_Mahony_Update(_imuData_all imu, _ahrs_data *attitude);
+void AHRS_Kalman_Update(_imuData_all imu, _ahrs_data *attitude);
 
 
 void Sensor_Calibration(_imuData_all* imu);
@@ -148,6 +142,6 @@ void IMU_Temperature_Control(float target);  //IMU∫„Œ¬øÿ÷∆   ‰»ÎŒ¬∂»
 float invSqrt(float x);
 float DATA_Trans(u8 Data_1,u8 Data_2,u8 Data_3,u8 Data_4);
 
-void Cold_Start_ARHS(_imuData_all imu, uav_attitude *attitude);
+void Cold_Start_ARHS(_imuData_all imu, _ahrs_data *attitude);
 
 #endif

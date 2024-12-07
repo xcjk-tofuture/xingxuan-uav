@@ -7,8 +7,8 @@ extern u8 SbusRxBuf[40];
 u16 SbusChannels[16];
 osThreadId SbusUart6TaskHandle;
 
-SBUS_CH_CAL_Struct CAL_SBUS_CH;
-SBUS_CH_Struct SBUS_CH;
+_sbus_ch_cal_struct CAL_SBUS_CH;
+_sbus_ch_struct SBUS_CH;
 
 
 

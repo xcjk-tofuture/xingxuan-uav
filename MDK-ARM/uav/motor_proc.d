@@ -63,4 +63,5 @@ uav/motor_proc.o: ..\Peripheral_Proc\src\motor_proc.c \
   ..\MATH_Tools\inc\rotation.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\BMI088_1.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\bmi088reg.h \
-  ..\Peripheral_Proc\inc\flash_proc.h
+  ..\Peripheral_Proc\inc\flash_proc.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\string.h

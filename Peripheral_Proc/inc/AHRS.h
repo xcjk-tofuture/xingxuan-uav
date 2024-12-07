@@ -51,8 +51,8 @@ typedef struct
 	
 	
 	gyro_raw_data_t gyro;
-	Vector3f_t gyrobias;  		 //ÍÓÂİÒÇÁãÆ«Îó²î
-	
+	Vector3f_t gyrooffsetbias; //ÍÓÂİÒÇÁãÆ«Îó²î
+	Vector3f_t gyroscalebias;   //ÍÓÂİÒÇ¿Ì¶ÈÎó²î
 	
 	mag_raw_data_t mag;
 	Vector3f_t magoffsetbias;  //´ÅÁ¦¼ÆÁãÆ«Îó²î

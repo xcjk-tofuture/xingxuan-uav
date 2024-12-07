@@ -29,7 +29,31 @@ typedef struct
     uint16_t CH15;//通道15数值
     uint16_t CH16;//通道16数值
 		uint8_t Connect_State;//遥控器与接收器连接状态 0=未连接，1=正常连接
-}SBUS_CH_Struct;
+	
+		uint16_t CH1_MAX;
+		uint16_t CH1_MIN;
+	
+		uint16_t CH2_MAX;
+		uint16_t CH2_MIN;
+		
+		uint16_t CH3_MAX;
+		uint16_t CH3_MIN;
+		
+		uint16_t CH4_MAX;
+		uint16_t CH4_MIN;
+		
+		uint16_t CH5_MAX;
+		uint16_t CH5_MIN;
+	
+		uint16_t CH6_MAX;
+		uint16_t CH6_MIN;
+		
+		uint16_t CH7_MAX;
+		uint16_t CH7_MIN;
+		
+		uint16_t CH8_MAX;
+		uint16_t CH8_MIN;
+}_sbus_ch_struct;
 
 
 typedef struct
@@ -43,8 +67,7 @@ typedef struct
 		float CAL_CH7;//通道7数值
 		float CAL_CH8;//通道8数值
 		uint8_t Connect_State;//遥控器与接收器连接状态 0=未连接，1=正常连接
-}SBUS_CH_CAL_Struct;
-
+}_sbus_ch_cal_struct;
 
 void Sbus_Uart6_Task_Proc(void const * argument);
 void Sbus_Uart6_IDLE_Proc(uint16_t Size);

@@ -51,4 +51,18 @@ uav/flash_proc.o: ..\Peripheral_Proc\src\flash_proc.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\Core\Inc\parameter.h ..\Core\Inc\spi.h
+  ..\Core\Inc\parameter.h ..\Core\Inc\spi.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdio.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\string.h \
+  ..\Peripheral_Proc\inc\AHRS.h \
+  ..\Peripheral_Proc\inc\Attitude_Sensor\SPL06.h \
+  ..\Peripheral_Proc\inc\Attitude_Sensor\AK8975.h \
+  ..\MATH_Tools\inc\mathTool.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdlib.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdbool.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\math.h ..\MATH_Tools\inc\vector3.h \
+  ..\MATH_Tools\inc\rotation.h \
+  ..\Peripheral_Proc\inc\Attitude_Sensor\BMI088_1.h \
+  ..\Peripheral_Proc\inc\Attitude_Sensor\bmi088reg.h \
+  ..\Peripheral_Proc\inc\motor_proc.h ..\Peripheral_Proc\inc\sbus_proc.h \
+  ..\MATH_Tools\inc\PID.h

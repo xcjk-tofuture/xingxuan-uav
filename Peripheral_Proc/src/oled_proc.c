@@ -56,48 +56,22 @@ extern u8 SPL06Flag;    //AK8975初始化
 		//HAL_UART_Transmit(&huart1, (u8 *)"2233", 6, 50);
 		//上面的初始化以及清屏的代码在一开始处一定要写
 		//OLED_ShowString(0,0,"xcjk",16, 0);    //反相显示8X16字符串
-//		if(Bmi088Init_Flag)
-//		{
-//			OLED_ShowString(0,0,"BMI088 ERROR",12, 0);    
-//		}
-//		else
-//		{
-//			OLED_ShowString(0,0,"BMI088 OK   ",12, 0);    
-//		}	
-//		if(SPL06Flag)
-//		{
-//			OLED_ShowString(0,1,"SPL06 ERROR",12, 0);    
-//		}
-//		else
-//		{
-//			OLED_ShowString(0,1,"SPL06 OK   ",12, 0);    
-//		}	
-//		if(AK8975Flag)
-//		{
-//			OLED_ShowString(0,2,"AK8975    ERROR",12, 0);    
-//		}
-//		else
-//		{
-//			OLED_ShowString(0,2,"AK8975     OK  ",12, 0);    
-//		}	
-//		sprintf((char *)oledDisp,"%d %d %d ",Bmi088Init_Flag, AK8975Flag, SPL06Flag); 
-//		OLED_ShowString(0,0,oledDisp,12, 0);  
 
 		sprintf((char *)oledDisp,"%0.1f %0.1f %0.1f     ",attitude_t.roll, attitude_t.pitch, attitude_t.yaw); 
-		OLED_ShowString(0,0,oledDisp,12, 0);  
+		OLED_ShowString(0,0,(char *)oledDisp,12, 0);  
 
 		//OLED_ShowString(0,4,"unicorn_li_123",12,0);//正相显示6X8字符串
 		sprintf((char *)oledDisp, "TEMP%0.2f   %0.2f    ",imudata_all.f_temperature, imudata_all.Pressure);
 		
-		OLED_ShowString(0, 3 ,oledDisp ,12, 0);
+		OLED_ShowString(0, 3 ,(char *)oledDisp ,12, 0);
 		sprintf((char *)oledDisp, "%.2f   %.2f     " , imudata_all.gyro.roll, imudata_all.acc.x);
-		OLED_ShowString(0, 4 ,oledDisp , 12, 0);
+		OLED_ShowString(0, 4 ,(char *)oledDisp , 12, 0);
 		sprintf((char *)oledDisp, "%.2f   %.2f     " , imudata_all.gyro.pitch, imudata_all.acc.y);
-		OLED_ShowString(0, 5 ,oledDisp , 12, 0);
+		OLED_ShowString(0, 5 ,(char *)oledDisp , 12, 0);
 		sprintf((char *)oledDisp, "%.2f   %.2f     ", imudata_all.gyro.yaw, imudata_all.acc.z);
-		OLED_ShowString(0, 6 ,oledDisp    , 12, 0);
+		OLED_ShowString(0, 6 ,(char *)oledDisp    , 12, 0);
 		sprintf((char *)oledDisp, "%0.1f  %0.1f  %0.1f   ", imudata_all.mag.x, imudata_all.mag.y, imudata_all.mag.z);
-		OLED_ShowString(0, 7 ,oledDisp    , 12, 0);
+		OLED_ShowString(0, 7 ,(char *)oledDisp    , 12, 0);
 		osDelay(100);
 
   }

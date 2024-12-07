@@ -62,4 +62,7 @@ uav/pc_proc.o: ..\Peripheral_Proc\src\pc_proc.c \
   ..\Peripheral_Proc\inc\AHRS.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\SPL06.h \
   ..\Peripheral_Proc\inc\flash_proc.h \
-  F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdio.h
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdio.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\string.h \
+  ..\Peripheral_Proc\inc\motor_proc.h ..\Peripheral_Proc\inc\sbus_proc.h \
+  ..\MATH_Tools\inc\PID.h

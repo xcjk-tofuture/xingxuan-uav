@@ -3,12 +3,59 @@
 
 osThreadId FlashTaskHandle;
 
+#define EXTERN_FLASH 1
+
 #define W25QXX_CS_L()  HAL_GPIO_WritePin(FLASH_CS_GPIO_Port, FLASH_CS_Pin, GPIO_PIN_RESET)
 #define W25QXX_CS_H()  HAL_GPIO_WritePin(FLASH_CS_GPIO_Port, FLASH_CS_Pin, GPIO_PIN_SET)
+
+
 
 uint16_t W25QXX_TYPE = 0;
 uint32_t W25QXX_SIZE = 0;
 uint8_t  W25QXX_UID[8];
+
+extern 
+
+void Flash_Task_Proc(void const * argument)
+{    
+//    // 定义要写入的float数组及其对应的地址
+//    float testDataFloat[4] = {1.23f, 2.34f, 3.45f, 4.56f};
+//    uint8_t writeBuffer[sizeof(float) * 4]; // 用于写入的缓冲区
+//    uint8_t readBuffer[sizeof(float) * 4];  // 用于读取的缓冲区
+//    float readDataFloat[4];
+//    uint32_t writeAddress = 0x0000; // 写入起始地址
+
+//    // 将float数据转换为字节数组以便写入
+//    memcpy(writeBuffer, testDataFloat, sizeof(testDataFloat));
+
+    for(;;)
+    {
+//        printf("flash_size:%d\r\n", W25QXX_SIZE);
+//        printf("flash_id:%d\r\n", W25QXX_TYPE);
+
+//        // 测试写入float数据到指定地址
+//        W25QXX_Write(writeBuffer, writeAddress, sizeof(writeBuffer));
+//        printf("Float data written to address: 0x%X\r\n", writeAddress);
+
+//        // 从指定地址读取数据并转换回float类型
+//        W25QXX_Read(readBuffer, writeAddress, sizeof(readBuffer));
+//        memcpy(readDataFloat, readBuffer, sizeof(readDataFloat));
+
+//        printf("Float data read from address: 0x%X - ", writeAddress);
+//        for (int i = 0; i < 4; ++i) {
+//            printf("%f ", readDataFloat[i]);
+//        }
+//        printf("\r\n");
+
+//        // 检查写入和读取的数据是否一致
+//        if (memcmp(writeBuffer, readBuffer, sizeof(writeBuffer)) == 0) {
+//            printf("Test passed.\r\n");
+//        } else {
+//            printf("Test failed.\r\n");
+//        }
+        osDelay(2000); // 等待2秒再进行下一次循环
+    }
+}
 
 static void delay_us(uint32_t us)
 {
@@ -17,6 +64,117 @@ static void delay_us(uint32_t us)
     {
         ;
     }
+}
+
+	
+//读飞控IMU数据 主要占据0x000 - 0x199
+void UAV_Read_Param_IMU(_imuData_all imu_data)
+{
+
+
+
+
+}
+
+//读飞控遥控器数据 主要占据0x200 - 0x399
+void UAV_Read_Param_Remote(_sbus_ch_struct channel_data)
+{
+
+
+
+
+}	
+
+
+//读飞控电机数据  主要占据0x400 - 0x599
+void UAV_Read_Param_Motor(_uav_control_data motor_data)
+{
+
+
+
+
+}
+
+
+//写飞控IMU数据 主要占据0x000 - 0x199
+void UAV_Write_Param_IMU(_imuData_all imu_data)
+{
+ float temp_imu_write[18] = {0};
+ temp_imu_write[0] = imu_data.accoffsetbias.x;
+ temp_imu_write[1] = imu_data.accoffsetbias.y;
+ temp_imu_write[2] = imu_data.accoffsetbias.z;
+ temp_imu_write[3] = imu_data.accscalebias.x;
+ temp_imu_write[4] = imu_data.accscalebias.y;
+ temp_imu_write[5] = imu_data.accscalebias.z;
+ 
+ temp_imu_write[6] = imu_data.gyrooffsetbias.x;
+ temp_imu_write[7] = imu_data.gyrooffsetbias.y;
+ temp_imu_write[8] = imu_data.gyrooffsetbias.z;
+ temp_imu_write[9] = imu_data.gyroscalebias.x;
+ temp_imu_write[10] = imu_data.gyroscalebias.y;
+ temp_imu_write[11] = imu_data.gyroscalebias.z;
+ 
+ temp_imu_write[12] = imu_data.magoffsetbias.x;
+ temp_imu_write[13] = imu_data.magoffsetbias.y;
+ temp_imu_write[14] = imu_data.magoffsetbias.z;
+ temp_imu_write[15] = imu_data.magscalebias.x;
+ temp_imu_write[16] = imu_data.magscalebias.y;
+ temp_imu_write[17] = imu_data.magscalebias.z;
+ 
+ W25QXX_Write((u8 *)temp_imu_write, 0x000, sizeof(temp_imu_write));
+}	
+
+
+//写飞控遥控器数据 主要占据0x200 - 0x399
+void UAV_Write_Param_Remote(_sbus_ch_struct channe_data)
+{
+ uint16_t temp_remote_write[16] = {0};
+ temp_remote_write[0] =  channe_data.CH1_MAX;
+ temp_remote_write[1] =  channe_data.CH1_MIN;
+ 
+ temp_remote_write[2] =  channe_data.CH2_MAX;
+ temp_remote_write[3] =  channe_data.CH2_MIN;
+ 
+ temp_remote_write[4] =  channe_data.CH3_MAX;
+ temp_remote_write[5] =  channe_data.CH3_MIN;
+ 
+ temp_remote_write[6] =  channe_data.CH4_MAX;
+ temp_remote_write[7] =  channe_data.CH4_MIN;
+ 
+ temp_remote_write[8] =  channe_data.CH5_MAX;
+ temp_remote_write[9] =  channe_data.CH5_MIN;
+ 
+ temp_remote_write[10] =  channe_data.CH6_MAX;
+ temp_remote_write[11] =  channe_data.CH6_MIN;
+ 
+ temp_remote_write[12] =  channe_data.CH7_MAX;
+ temp_remote_write[13] =  channe_data.CH7_MIN;
+ 
+ temp_remote_write[14] =  channe_data.CH8_MAX;
+ temp_remote_write[15] =  channe_data.CH8_MIN;
+
+ W25QXX_Write((u8 *)temp_remote_write, 0x200, sizeof(temp_remote_write));
+}	
+
+
+//写飞控电机数据  主要占据0x400 - 0x599
+void UAV_Write_Param_Motor(_uav_control_data motor_data)
+{
+	float temp_motor_write[9] = {0};
+
+	temp_motor_write[0] = motor_data.rollData.Kp;
+	temp_motor_write[1] = motor_data.rollData.Ki;
+	temp_motor_write[2] = motor_data.rollData.Kd;
+	
+	temp_motor_write[3] = motor_data.rollData.Kp;
+	temp_motor_write[4] = motor_data.rollData.Ki;
+	temp_motor_write[5] = motor_data.rollData.Kd;
+	
+	temp_motor_write[6] = motor_data.rollData.Kp;
+	temp_motor_write[7] = motor_data.rollData.Ki;
+	temp_motor_write[8] = motor_data.rollData.Kd;
+	
+	W25QXX_Write((u8 *)temp_motor_write, 0x00, sizeof(temp_motor_write));
 }
 
 //SPI读写一个字节
@@ -337,20 +495,3 @@ void W25QXX_WAKEUP(void)
 }
 
 
-
-
-
-
-void Flash_Task_Proc(void const * argument)
-{
-	//W25QXX_Init();
-  for(;;)
-  {
-		
-		//printf("flash_size:%d\r\n", W25QXX_SIZE);
-		//printf("flash_id:%d\r\n", W25QXX_TYPE);
-		osDelay(200);
-
-  }	
-	
-}

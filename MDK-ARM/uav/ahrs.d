@@ -59,8 +59,11 @@ uav/ahrs.o: ..\Peripheral_Proc\src\AHRS.c ..\Peripheral_Proc\inc\AHRS.h \
   ..\MATH_Tools\inc\rotation.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\BMI088_1.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\bmi088reg.h \
-  ..\Peripheral_Proc\inc\flash_proc.h ..\Peripheral_Proc\inc\oled_proc.h \
+  ..\Peripheral_Proc\inc\flash_proc.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdio.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\string.h \
+  ..\Peripheral_Proc\inc\motor_proc.h ..\Peripheral_Proc\inc\sbus_proc.h \
+  ..\MATH_Tools\inc\PID.h ..\Peripheral_Proc\inc\oled_proc.h \
   ..\Core\Inc\usart.h ..\Peripheral_Proc\inc\oledfont.h \
   ..\MATH_Tools\inc\lowPassFilter.h ..\MATH_Tools\inc\matrix6.h \
-  ..\MATH_Tools\inc\pid.h ..\Core\Inc\tim.h \
-  F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdio.h
+  ..\Core\Inc\tim.h

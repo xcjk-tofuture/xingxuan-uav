@@ -1,12 +1,14 @@
 #include "motor_proc.h"
 
 
-extern SBUS_CH_CAL_Struct CAL_SBUS_CH;
+extern _sbus_ch_cal_struct CAL_SBUS_CH;
 extern _ahrs_data attitude_t;
+
+_uav_control_data uav_control_data;
 
 osThreadId MotorTaskHandle;
 
-_uav_control_data uav_control_data;
+
 
 
 

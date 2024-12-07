@@ -9,9 +9,13 @@
 #include "timers.h"
 #include "parameter.h"
 #include "spi.h"
+#include "stdio.h"
+#include "string.h"
 
 
-
+#include "AHRS.h"
+#include "motor_proc.h"
+#include "sbus_proc.h"
 
 void W25q32_Task_Proc(void const * argument);
 

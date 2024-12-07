@@ -10,10 +10,10 @@
 #define DEG_PER_RAD     57.29577951f
 
 
-#define EXTERN_IMU 0
+#define EXTERN_IMU 1
 
 #define SENSORS_ENABLE_SPL06 1;
-#define UPDATE_TIME 10
+#define UPDATE_TIME 5
 
 
 #define CALIBRATION_COUNT 500 //¾ö¶¨ÓÃ¶àÉÙ¸öÖµÈ¥×öÐ£×¼
@@ -119,18 +119,18 @@ void AHRS_Uart4_IDLE_Proc(u8 size)
 	if(size == 56 && uart4RX[0] == 0xFC && uart4RX[1] == 0x41)
 	{
 		#if EXTERN_IMU
-		ahrs_data.rollSpeed=DATA_Trans(uart4RX[7],uart4RX[8],uart4RX[9],uart4RX[10]) * DEG_PER_RAD;       //ºá¹ö½ÇËÙ¶È
-		ahrs_data.pitchSpeed=DATA_Trans(uart4RX[11],uart4RX[12],uart4RX[13],uart4RX[14]) * DEG_PER_RAD;   //¸©Ñö½ÇËÙ¶È
-		ahrs_data.yawSpeed=DATA_Trans(uart4RX[15],uart4RX[16],uart4RX[17],uart4RX[18]) * DEG_PER_RAD; //Æ«º½½ÇËÙ¶È
+		attitude_t.rollSpeed=DATA_Trans(uart4RX[7],uart4RX[8],uart4RX[9],uart4RX[10]) * DEG_PER_RAD;       //ºá¹ö½ÇËÙ¶È
+		attitude_t.pitchSpeed=DATA_Trans(uart4RX[11],uart4RX[12],uart4RX[13],uart4RX[14]) * DEG_PER_RAD;   //¸©Ñö½ÇËÙ¶È
+		attitude_t.yawSpeed=DATA_Trans(uart4RX[15],uart4RX[16],uart4RX[17],uart4RX[18]) * DEG_PER_RAD; //Æ«º½½ÇËÙ¶È
 			
-    ahrs_data.roll=DATA_Trans(uart4RX[19],uart4RX[20],uart4RX[21],uart4RX[22]) * DEG_PER_RAD;      //ºá¹ö½Ç
-		ahrs_data.pitch=DATA_Trans(uart4RX[23],uart4RX[24],uart4RX[25],uart4RX[26]) * DEG_PER_RAD;     //¸©Ñö½Ç
-		ahrs_data.yaw=DATA_Trans(uart4RX[27],uart4RX[28],uart4RX[29],uart4RX[30]) * DEG_PER_RAD;	 //Æ«º½½Ç
+    attitude_t.roll=DATA_Trans(uart4RX[19],uart4RX[20],uart4RX[21],uart4RX[22]) * DEG_PER_RAD;      //ºá¹ö½Ç
+		attitude_t.pitch=DATA_Trans(uart4RX[23],uart4RX[24],uart4RX[25],uart4RX[26]) * DEG_PER_RAD;     //¸©Ñö½Ç
+		attitude_t.yaw=DATA_Trans(uart4RX[27],uart4RX[28],uart4RX[29],uart4RX[30]) * DEG_PER_RAD;	 //Æ«º½½Ç
 			
-		ahrs_data.q0=DATA_Trans(uart4RX[31],uart4RX[32],uart4RX[33],uart4RX[34]);  //ËÄÔªÊý
-		ahrs_data.q1=DATA_Trans(uart4RX[35],uart4RX[36],uart4RX[37],uart4RX[38]);
-		ahrs_data.q2=DATA_Trans(uart4RX[39],uart4RX[40],uart4RX[41],uart4RX[42]);
-		ahrs_data.q3=DATA_Trans(uart4RX[43],uart4RX[44],uart4RX[45],uart4RX[46]);
+		attitude_t.q0=DATA_Trans(uart4RX[31],uart4RX[32],uart4RX[33],uart4RX[34]);  //ËÄÔªÊý
+		attitude_t.q1=DATA_Trans(uart4RX[35],uart4RX[36],uart4RX[37],uart4RX[38]);
+		attitude_t.q2=DATA_Trans(uart4RX[39],uart4RX[40],uart4RX[41],uart4RX[42]);
+		attitude_t.q3=DATA_Trans(uart4RX[43],uart4RX[44],uart4RX[45],uart4RX[46]);
 		#endif
 	}
 
@@ -188,7 +188,7 @@ void Sensors_Init()  //´«¸ÐÆ÷³õÊ¼»¯
 void Sensor_Calibration(_imuData_all* imu)  //´«¸ÐÆ÷Ð£×¼
 {
 	if(GyroCalFlag)
-		Simple_Zero_Offset_Calibration(imu, &(imu->gyrobias));  //¼òµ¥ÁãÆ«Îó²îÐ£×¼
+		Simple_Zero_Offset_Calibration(imu, &(imu->gyrooffsetbias));  //¼òµ¥ÁãÆ«Îó²îÐ£×¼
 	if(AccCalFlag)
 		Acc_LMS_Calibration(imu, &(imu->accoffsetbias), &(imu->accscalebias));
 }
@@ -374,6 +374,17 @@ void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _i
 //	imu->acc.x =imu->acc.x * (1 - 0.9) + acc.x * 0.9;
 //	imu->acc.y =imu->acc.y * (1 - 0.9) + acc.y * 0.9;
 //	imu->acc.z =imu->acc.z * (1 - 0.9) + acc.z * 0.9; //Ò»½×µÍÍ¨ÂË²¨33	
+	
+	gyro.roll = gyro.roll - imu->gyrooffsetbias.x;
+	gyro.pitch = gyro.pitch - imu->gyrooffsetbias.y;
+	gyro.yaw = gyro.yaw - imu->gyrooffsetbias.z;
+	
+	imu->gyro.pitch =imu->gyro.pitch * (1 - 0.3) +  gyro.pitch * 0.3;
+	imu-> gyro.roll =imu-> gyro.roll * (1 - 0.3) +  gyro.roll * 0.3;
+	imu-> gyro.yaw =imu-> gyro.yaw * (1 - 0.3) +  gyro.yaw * 0.3; //Ò»½×µÍÍ¨ÂË²¨33	
+	
+	
+	
 	imu->acc.x =acc.x ;
 	imu->acc.y =acc.y;
 	imu->acc.z =acc.z ;
@@ -387,9 +398,9 @@ void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _i
 	LPF2ndData_t LPF2_MAG;
 	Vector3f_t LPF2_MAG_Data;
 	
-	LPF2_GYRO_Data.x = gyro.roll - imu->gyrobias.x;
-	LPF2_GYRO_Data.y = gyro.pitch - imu->gyrobias.y;
-	LPF2_GYRO_Data.z = gyro.yaw - imu->gyrobias.z;
+	LPF2_GYRO_Data.x = gyro.roll - imu->gyrooffsetbias.x;
+	LPF2_GYRO_Data.y = gyro.pitch - imu->gyrooffsetbias.y;
+	LPF2_GYRO_Data.z = gyro.yaw - imu->gyrooffsetbias.z;
 	
 	LPF2_ACC_Data.x = acc.x;
 	LPF2_ACC_Data.y = acc.y;
@@ -397,15 +408,15 @@ void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _i
 	
 
 	
-	LowPassFilter2ndFactorCal(UPDATE_TIME, 50, &LPF2_GYRO);
+	LowPassFilter2ndFactorCal(UPDATE_TIME, 30, &LPF2_GYRO);
 	LPF2_GYRO_Data = LowPassFilter2nd(&LPF2_GYRO, LPF2_GYRO_Data);     //ÍÓÂÝÒÇ¶þ½×µÍÍ¨ÂË²¨ ½ØÖ¹ÆµÂÊ50HZ
 	
 	LowPassFilter2ndFactorCal(UPDATE_TIME, 50, &LPF2_ACC);
 	LPF2_ACC_Data = LowPassFilter2nd(&LPF2_ACC, LPF2_ACC_Data);     //ÍÓÂÝÒÇ¶þ½×µÍÍ¨ÂË²¨ ½ØÖ¹ÆµÂÊ50HZ
 	
-	imu->gyro.pitch = LPF2_GYRO_Data.y;
-	imu->gyro.roll = LPF2_GYRO_Data.x;
-	imu->gyro.yaw = LPF2_GYRO_Data.z;   //¼õÈ¥ÁãÆ«Îó²î
+//	imu->gyro.pitch = LPF2_GYRO_Data.y;
+//	imu->gyro.roll =  LPF2_GYRO_Data.x;
+//	imu->gyro.yaw =  LPF2_GYRO_Data.z;   //¼õÈ¥ÁãÆ«Îó²î
 	
   imu->acc.x = LPF2_ACC_Data.x;
 	imu->acc.y = LPF2_ACC_Data.y;

@@ -1,6 +1,8 @@
 #include "sbus_proc.h"
 
 
+extern void UAV_Read_Param_Remote(_sbus_ch_struct* channel_data);
+extern void UAV_Write_Param_Remote(_sbus_ch_struct channe_data);
 extern UART_HandleTypeDef huart6;
 extern UART_HandleTypeDef huart3;
 extern u8 SbusRxBuf[40];
@@ -11,6 +13,8 @@ _sbus_ch_cal_struct CAL_SBUS_CH;
 _sbus_ch_struct SBUS_CH;
 
 
+u8 remoteCaliFlag = 0;
+u8 remoteCaliSaveFlashFlag = 0;
 
 void Sbus_Uart6_Task_Proc(void const * argument)
 {
@@ -21,16 +25,28 @@ void Sbus_Uart6_Task_Proc(void const * argument)
 //	TIM1->CCR2 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000);
 //	TIM1->CCR3 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000);
 //	TIM1->CCR4 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000);
-		CAL_SBUS_CH.CAL_CH1 = Sbus_To_Range(SBUS_CH.CH1, 1000, 2000, SBUS_CH.CH1_MIN, SBUS_CH.CH1_MAX);
-		CAL_SBUS_CH.CAL_CH2 = Sbus_To_Range(SBUS_CH.CH2, 1000, 2000, SBUS_CH.CH2_MIN, SBUS_CH.CH2_MAX);
-		CAL_SBUS_CH.CAL_CH3 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000, SBUS_CH.CH3_MIN, SBUS_CH.CH3_MAX);
-		CAL_SBUS_CH.CAL_CH4 = Sbus_To_Range(SBUS_CH.CH4, 1000, 2000, SBUS_CH.CH4_MIN, SBUS_CH.CH4_MAX);	
-		
-		CAL_SBUS_CH.CAL_CH5 = Sbus_To_Range(SBUS_CH.CH5, 1000, 2000, SBUS_CH.CH1_MIN, SBUS_CH.CH1_MAX);
-		CAL_SBUS_CH.CAL_CH6 = Sbus_To_Range(SBUS_CH.CH6, 1000, 2000, SBUS_CH.CH2_MIN, SBUS_CH.CH2_MAX);
-		CAL_SBUS_CH.CAL_CH7 = Sbus_To_Range(SBUS_CH.CH7, 1000, 2000, SBUS_CH.CH3_MIN, SBUS_CH.CH3_MAX);
-		CAL_SBUS_CH.CAL_CH8 = Sbus_To_Range(SBUS_CH.CH8, 1000, 2000, SBUS_CH.CH4_MIN, SBUS_CH.CH4_MAX);	
-		CAL_SBUS_CH.Connect_State = SBUS_CH.Connect_State;
+	if(SBUS_CH.Connect_State == 1)
+	{
+		if(!remoteCaliFlag)
+		{	
+			CAL_SBUS_CH.CAL_CH1 = Sbus_To_Range(SBUS_CH.CH1, 1000, 2000, SBUS_CH.CH1_MIN, SBUS_CH.CH1_MAX);
+			CAL_SBUS_CH.CAL_CH2 = Sbus_To_Range(SBUS_CH.CH2, 1000, 2000, SBUS_CH.CH2_MIN, SBUS_CH.CH2_MAX);
+			CAL_SBUS_CH.CAL_CH3 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000, SBUS_CH.CH3_MIN, SBUS_CH.CH3_MAX);
+			CAL_SBUS_CH.CAL_CH4 = Sbus_To_Range(SBUS_CH.CH4, 1000, 2000, SBUS_CH.CH4_MIN, SBUS_CH.CH4_MAX);	
+			
+			CAL_SBUS_CH.CAL_CH5 = Sbus_To_Range(SBUS_CH.CH5, 1000, 2000, SBUS_CH.CH1_MIN, SBUS_CH.CH1_MAX);
+			CAL_SBUS_CH.CAL_CH6 = Sbus_To_Range(SBUS_CH.CH6, 1000, 2000, SBUS_CH.CH2_MIN, SBUS_CH.CH2_MAX);
+			CAL_SBUS_CH.CAL_CH7 = Sbus_To_Range(SBUS_CH.CH7, 1000, 2000, SBUS_CH.CH3_MIN, SBUS_CH.CH3_MAX);
+			CAL_SBUS_CH.CAL_CH8 = Sbus_To_Range(SBUS_CH.CH8, 1000, 2000, SBUS_CH.CH4_MIN, SBUS_CH.CH4_MAX);	
+			CAL_SBUS_CH.Connect_State = SBUS_CH.Connect_State;
+		}
+		else
+		{
+			Remote_Channel_Calibration();
+		}
+	}
+
+
 		osDelay(200);
 //  TIM1->CCR1 = 1500;	
 //	TIM1->CCR1 = 1100;	
@@ -63,32 +79,71 @@ void Sbus_Uart6_Task_Proc(void const * argument)
 }
 
 
+void Remote_Channel_Calibration()
+{
+	SBUS_CH.CH1_MIN = SBUS_CH.CH1 < SBUS_CH.CH1_MIN  ? SBUS_CH.CH1 : SBUS_CH.CH1_MIN;
+	SBUS_CH.CH1_MAX = SBUS_CH.CH1 > SBUS_CH.CH1_MAX  ? SBUS_CH.CH1 : SBUS_CH.CH1_MAX;
+	
+	SBUS_CH.CH2_MIN = SBUS_CH.CH2 < SBUS_CH.CH2_MIN  ? SBUS_CH.CH2 : SBUS_CH.CH2_MIN;
+	SBUS_CH.CH2_MAX = SBUS_CH.CH2 > SBUS_CH.CH2_MAX  ? SBUS_CH.CH2 : SBUS_CH.CH2_MAX;
+	
+	SBUS_CH.CH3_MIN = SBUS_CH.CH3 < SBUS_CH.CH3_MIN  ? SBUS_CH.CH3 : SBUS_CH.CH3_MIN;
+	SBUS_CH.CH3_MAX = SBUS_CH.CH3 > SBUS_CH.CH3_MAX  ? SBUS_CH.CH3 : SBUS_CH.CH3_MAX;
+	
+	
+	SBUS_CH.CH4_MIN = SBUS_CH.CH4 < SBUS_CH.CH4_MIN  ? SBUS_CH.CH4 : SBUS_CH.CH4_MIN;
+	SBUS_CH.CH4_MAX = SBUS_CH.CH4 > SBUS_CH.CH4_MAX  ? SBUS_CH.CH4 : SBUS_CH.CH4_MAX;
+	
+	SBUS_CH.CH5_MIN = SBUS_CH.CH5 < SBUS_CH.CH5_MIN  ? SBUS_CH.CH5 : SBUS_CH.CH5_MIN;
+	SBUS_CH.CH5_MAX = SBUS_CH.CH5 > SBUS_CH.CH5_MAX  ? SBUS_CH.CH5 : SBUS_CH.CH5_MAX;
+	
+	SBUS_CH.CH6_MIN = SBUS_CH.CH6 < SBUS_CH.CH6_MIN  ? SBUS_CH.CH6 : SBUS_CH.CH6_MIN;
+	SBUS_CH.CH6_MAX = SBUS_CH.CH6 > SBUS_CH.CH6_MAX  ? SBUS_CH.CH6 : SBUS_CH.CH6_MAX;
+	
+	SBUS_CH.CH7_MIN = SBUS_CH.CH7 < SBUS_CH.CH7_MIN  ? SBUS_CH.CH7 : SBUS_CH.CH7_MIN;
+	SBUS_CH.CH7_MAX = SBUS_CH.CH7 > SBUS_CH.CH7_MAX  ? SBUS_CH.CH7 : SBUS_CH.CH7_MAX;
+	
+	SBUS_CH.CH8_MIN = SBUS_CH.CH8 < SBUS_CH.CH8_MIN  ? SBUS_CH.CH8 : SBUS_CH.CH8_MIN;
+	SBUS_CH.CH8_MAX = SBUS_CH.CH8 > SBUS_CH.CH8_MAX  ? SBUS_CH.CH8 : SBUS_CH.CH8_MAX;
+
+
+	if(remoteCaliSaveFlashFlag)
+	{
+	  remoteCaliFlag = 0;
+		UAV_Write_Param_Remote(SBUS_CH);
+	}
+
+}
+
 void Channel_Param_Init()
 {
-  SBUS_CH.CH1_MIN = 353;
-	SBUS_CH.CH1_MAX = 1697;
-	
-	SBUS_CH.CH2_MIN = 353;
-	SBUS_CH.CH2_MAX = 1697;
-	
-	SBUS_CH.CH3_MIN = 353;
-	SBUS_CH.CH3_MAX = 1697;
 	
 	
-	SBUS_CH.CH4_MIN = 353;
-	SBUS_CH.CH4_MAX = 1697;
-	
-	SBUS_CH.CH5_MIN = 353;
-	SBUS_CH.CH5_MAX = 1697;
-	
-	SBUS_CH.CH6_MIN = 353;
-	SBUS_CH.CH6_MAX = 1697;
-	
-	SBUS_CH.CH7_MIN = 353;
-	SBUS_CH.CH7_MAX = 1697;
-	
-	SBUS_CH.CH8_MIN = 353;
-	SBUS_CH.CH8_MAX = 1697;
+	UAV_Read_Param_Remote(&SBUS_CH);
+//  SBUS_CH.CH1_MIN = 353;
+//	SBUS_CH.CH1_MAX = 1697;
+//	
+//	SBUS_CH.CH2_MIN = 353;
+//	SBUS_CH.CH2_MAX = 1697;
+//	
+//	SBUS_CH.CH3_MIN = 353;
+//	SBUS_CH.CH3_MAX = 1697;
+//	
+//	
+//	SBUS_CH.CH4_MIN = 353;
+//	SBUS_CH.CH4_MAX = 1697;
+//	
+//	SBUS_CH.CH5_MIN = 353;
+//	SBUS_CH.CH5_MAX = 1697;
+//	
+//	SBUS_CH.CH6_MIN = 353;
+//	SBUS_CH.CH6_MAX = 1697;
+//	
+//	SBUS_CH.CH7_MIN = 353;
+//	SBUS_CH.CH7_MAX = 1697;
+//	
+//	SBUS_CH.CH8_MIN = 353;
+//	SBUS_CH.CH8_MAX = 1697;
 
 }
 
@@ -99,7 +154,7 @@ void Sbus_Uart6_IDLE_Proc(uint16_t Size)
 	{
 		
 		Sbus_Channels_Proc();
-		if(SbusRxBuf[23] == 0)
+		if(SBUS_CH.CH1 > 200 && SBUS_CH.CH2 > 200)
 		{
 				SBUS_CH.Connect_State = 1; //Ò£¿ØÆ÷´ò¿ª
 		}

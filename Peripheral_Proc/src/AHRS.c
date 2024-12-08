@@ -18,7 +18,8 @@
 
 #define CALIBRATION_COUNT 500 //决定用多少个值去做校准
 
-
+extern void UAV_Read_Param_IMU(_imuData_all* imu_data);
+extern void UAV_Write_Param_IMU(_imuData_all imu_data);
 
 extern u8 uart4RX[200];
 
@@ -46,7 +47,8 @@ PID imu_temperature_control_pid;
 u8 SensorError = 0;
 u8 AccCalFlag = 1;   //传感器校准标准位
 u8 GyroCalFlag = 1;   //传感器校准标准位
-u8 MagCalFlag = 1;   //传感器校准标准位
+
+u8 MagCalFlag = 0;   //传感器校准标准位
 u8 Bmi088Init_Flag = 1;
 u8 AK8975Flag = 1;
 u8 SPL06Flag = 1;
@@ -55,7 +57,7 @@ u8 IMUTemperatureFlag = 1;
 u32 sensorTimeCount = 0;
 void Sensor_Data_Task_Proc(void const * argument)
 {
-	osDelay(2000);
+	osDelay(1000);
 	#if !EXTERN_IMU
 	Sensors_Init();  //传感器初始化
 	#else
@@ -92,7 +94,7 @@ void Sensor_Data_Task_Proc(void const * argument)
 	#if !EXTERN_IMU
 		ReadMagData(&test_mag);
 		IMU_Update(test_acc, test_gyro, test_mag, &imudata_all);
-	 if(!(AccCalFlag || GyroCalFlag))	
+	 if(!(AccCalFlag || GyroCalFlag || MagCalFlag))	
 	 {
 		//AHRS_Kalman_Update(imudata_all, &attitude_t);  
 		AHRS_Mahony_Update(imudata_all, &attitude_t);
@@ -107,13 +109,6 @@ void Sensor_Data_Task_Proc(void const * argument)
 	 }
 	#endif
 	}
-
-	
-		 //传感器
-		//FlashTest = W25QXX_ReadID();
-	
-	
-	
 	}
 
 }
@@ -166,6 +161,9 @@ float DATA_Trans(u8 Data_1,u8 Data_2,u8 Data_3,u8 Data_4)
 void Sensors_Init()  //传感器初始化
 {
 	
+	//UAV_Read_Param_IMU(&imudata_all);  //读传感器校准数据
+	
+	
 	AK8975Flag      = DrvAK8975Check();
 	Bmi088Init_Flag = BMI088_INIT();
 	
@@ -196,6 +194,48 @@ void Sensor_Calibration(_imuData_all* imu)  //传感器校准
 		Simple_Zero_Offset_Calibration(imu, &(imu->gyrooffsetbias));  //简单零偏误差校准
 	if(AccCalFlag)
 		Acc_LMS_Calibration(imu, &(imu->accoffsetbias), &(imu->accscalebias));
+}
+
+u8 magCalistep = 0;
+void Mag_Zero_Offset_Calibration(_imuData_all* imu)
+{
+		static float gyroRoll, gyroPitch, gyroYaw;
+		static float magXMax, magYMax, magZMax;
+		static float magXMin, magYMin, magZMin;
+	  switch(magCalistep)
+		{
+			case 0:
+				gyroRoll += imu->gyro.roll * (UPDATE_TIME / 1000.f);
+				magXMax = magXMax > imu->mag.x ? magXMax : imu->mag.x;
+				magXMin = magXMin < imu->mag.x ? magXMin : imu->mag.x;
+			  if(gyroRoll >= PI * 2.0f)
+					magCalistep = 1;
+				break;
+			case 1:
+				gyroPitch += imu->gyro.pitch * (UPDATE_TIME / 1000.f);
+				magYMax = magYMax > imu->mag.y ? magYMax : imu->mag.y;
+				magYMin = magYMin < imu->mag.y ? magYMin : imu->mag.y;
+			  if(gyroPitch >= PI * 2.0f)
+					magCalistep = 2;
+				break;
+			case 2:
+				gyroYaw += imu->gyro.yaw * (UPDATE_TIME / 1000.f);
+				magZMax = magZMax > imu->mag.z ? magZMax : imu->mag.z;
+				magZMin = magZMin < imu->mag.z ? magZMin : imu->mag.z;
+			  if(gyroYaw >= PI * 2.0f)
+					magCalistep = 3;
+				break;
+			case 3:
+				imu->magoffsetbias.x = (magXMax + magXMin)  / 2;
+				imu->magoffsetbias.y = (magYMax + magYMin)  / 2;
+				imu->magoffsetbias.z = (magZMax + magZMin)  / 2;
+				magCalistep = 0;
+			  gyroRoll = 0;
+				gyroPitch = 0;
+				gyroYaw = 0;
+				UAV_Write_Param_IMU(*imu); //写入数据
+				break;
+		}
 }
 
 

@@ -43,6 +43,7 @@ u8 displayPage = 1;
   /* USER CODE BEGIN RGB_Task_Proc */
   /* Infinite loop */
 	u8 oledDisp[40];
+	OLED_Clear();
   for(;;)
   {
 		Show_Data(displayPage);
@@ -65,17 +66,17 @@ void Show_Data(u8 page)
 	{
 	  sprintf((char *)oledDisp,"PAGE 1  IMU DATA "); 
 		OLED_ShowString(0, 0,(char *)oledDisp,12, 0); 
-		sprintf((char *)oledDisp,"R:%0.1f P:%0.1f Y:%0.1f     ",attitude_t.roll, attitude_t.pitch, attitude_t.yaw); 
+		sprintf((char *)oledDisp,"R:%+0.1f P:%+0.1f Y:%0.1f     ",attitude_t.roll, attitude_t.pitch, attitude_t.yaw); 
 		OLED_ShowString(0, 1,(char *)oledDisp,12, 0);  
 	  sprintf((char *)oledDisp, "TEMP%0.1f BA:%0.1f  ",  imudata_all.f_temperature, imudata_all.Pressure);
 		OLED_ShowString(0, 2 ,(char *)oledDisp ,12, 0);
-		sprintf((char *)oledDisp, "GX %.2f AX %.2f     " , imudata_all.gyro.roll, imudata_all.acc.x);
+		sprintf((char *)oledDisp, "GX %+.2f AX %+.2f     " , imudata_all.gyro.roll, imudata_all.acc.x);
 		OLED_ShowString(0, 3 ,(char *)oledDisp , 12, 0);
-		sprintf((char *)oledDisp, "GY %.2f AY %.2f     " , imudata_all.gyro.pitch, imudata_all.acc.y);
+		sprintf((char *)oledDisp, "GY %+.2f AY %+.2f     " , imudata_all.gyro.pitch, imudata_all.acc.y);
 		OLED_ShowString(0, 4 ,(char *)oledDisp , 12, 0);
-		sprintf((char *)oledDisp, "GZ %.2f AZ %.2f     ",  imudata_all.gyro.yaw, imudata_all.acc.z);
+		sprintf((char *)oledDisp, "GZ %+.2f AZ %+.2f     ",  imudata_all.gyro.yaw, imudata_all.acc.z);
 		OLED_ShowString(0, 5 ,(char *)oledDisp    , 12, 0);
-		sprintf((char *)oledDisp, "MX %0.1f MY%0.1f MZ%0.1f   ", imudata_all.mag.x, imudata_all.mag.y, imudata_all.mag.z);
+		sprintf((char *)oledDisp, "MX%+6.1f MY%+6.1f    MZ%+6.1f  ", imudata_all.mag.x, imudata_all.mag.y, imudata_all.mag.z);
 		OLED_ShowString(0, 6 ,(char *)oledDisp    , 12, 0);
 	}
 	else if(page == 2)
@@ -83,24 +84,50 @@ void Show_Data(u8 page)
 //		sprintf((char *)oledDisp,"PAGE 2  REMOTE DATA "); 
 //		OLED_ShowString(0, 0,(char *)oledDisp,12, 0);
 		
-		sprintf((char *)oledDisp,"C1 %d %d %d %d ", CAL_SBUS_CH.CAL_CH1, SBUS_CH.CH1, SBUS_CH.CH1_MAX, SBUS_CH.CH1_MIN); 
+		sprintf((char *)oledDisp,"Ch1 %04d %04d       ", CAL_SBUS_CH.CAL_CH1, SBUS_CH.CH1); 
 		OLED_ShowString(0, 0,(char *)oledDisp,12, 0);
-		sprintf((char *)oledDisp,"C2 %d %d %d %d ", CAL_SBUS_CH.CAL_CH2, SBUS_CH.CH2, SBUS_CH.CH2_MAX, SBUS_CH.CH2_MIN); 
+		sprintf((char *)oledDisp,"Ch2 %04d %04d       ", CAL_SBUS_CH.CAL_CH2, SBUS_CH.CH2); 
 		OLED_ShowString(0, 1,(char *)oledDisp,12, 0);
-		sprintf((char *)oledDisp,"C3 %d %d %d %d ", CAL_SBUS_CH.CAL_CH3, SBUS_CH.CH3, SBUS_CH.CH3_MAX, SBUS_CH.CH3_MIN); 
+		sprintf((char *)oledDisp,"Ch3 %04d %04d       ", CAL_SBUS_CH.CAL_CH3, SBUS_CH.CH3); 
 		OLED_ShowString(0, 2,(char *)oledDisp,12, 0);
-		sprintf((char *)oledDisp,"C4 %d %d %d %d ", CAL_SBUS_CH.CAL_CH4, SBUS_CH.CH4, SBUS_CH.CH4_MAX, SBUS_CH.CH4_MIN); 
+		sprintf((char *)oledDisp,"Ch4 %04d %04d       ", CAL_SBUS_CH.CAL_CH4, SBUS_CH.CH4); 
 		OLED_ShowString(0, 3,(char *)oledDisp,12, 0);
-		sprintf((char *)oledDisp,"C5 %d %d %d %d ", CAL_SBUS_CH.CAL_CH5, SBUS_CH.CH5, SBUS_CH.CH5_MAX, SBUS_CH.CH5_MIN); 
+		sprintf((char *)oledDisp,"Ch5 %04d %04d       ", CAL_SBUS_CH.CAL_CH5, SBUS_CH.CH5); 
 		OLED_ShowString(0, 4,(char *)oledDisp,12, 0);
-		sprintf((char *)oledDisp,"C6 %d %d %d %d ", CAL_SBUS_CH.CAL_CH6, SBUS_CH.CH6, SBUS_CH.CH6_MAX, SBUS_CH.CH6_MIN); 
+		sprintf((char *)oledDisp,"Ch6 %04d %04d       ", CAL_SBUS_CH.CAL_CH6, SBUS_CH.CH6); 
 		OLED_ShowString(0, 5,(char *)oledDisp,12, 0);
-		sprintf((char *)oledDisp,"C7 %d %d %d %d ", CAL_SBUS_CH.CAL_CH7, SBUS_CH.CH7, SBUS_CH.CH7_MAX, SBUS_CH.CH7_MIN); 
+		sprintf((char *)oledDisp,"Ch7 %04d %04d       ", CAL_SBUS_CH.CAL_CH7, SBUS_CH.CH7); 
 		OLED_ShowString(0, 6,(char *)oledDisp,12, 0);
-		sprintf((char *)oledDisp,"C8 %d %d %d %d ", CAL_SBUS_CH.CAL_CH8, SBUS_CH.CH8, SBUS_CH.CH8_MAX, SBUS_CH.CH8_MIN); 
+		sprintf((char *)oledDisp,"Ch8 %04d %04d       ", CAL_SBUS_CH.CAL_CH8, SBUS_CH.CH8); 
 		OLED_ShowString(0, 7,(char *)oledDisp,12, 0);
 	}
 
+	
+		else if(page == 19)
+	{
+		sprintf((char *)oledDisp,"CAL_Ch1 %04d %04d    ",SBUS_CH.CH1_MAX, SBUS_CH.CH1_MIN); 
+		OLED_ShowString(0, 0,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"CAL_Ch2 %04d %04d    ",SBUS_CH.CH2_MAX, SBUS_CH.CH2_MIN); 
+		OLED_ShowString(0, 1,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"CAL_Ch3 %04d %04d    ",SBUS_CH.CH3_MAX, SBUS_CH.CH3_MIN); 
+		OLED_ShowString(0, 2,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"CAL_Ch4 %04d %04d    ",SBUS_CH.CH4_MAX, SBUS_CH.CH4_MIN); 
+		OLED_ShowString(0, 3,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"CAL_Ch5 %04d %04d    ",SBUS_CH.CH5_MAX, SBUS_CH.CH5_MIN); 
+		OLED_ShowString(0, 4,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"CAL_Ch6 %04d %04d    ",SBUS_CH.CH6_MAX, SBUS_CH.CH6_MIN); 
+		OLED_ShowString(0, 5,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"CAL_Ch7 %04d %04d    ",SBUS_CH.CH7_MAX, SBUS_CH.CH7_MIN); 
+		OLED_ShowString(0, 6,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"CAL_Ch8 %04d %04d    ",SBUS_CH.CH8_MAX, SBUS_CH.CH8_MIN); 
+		OLED_ShowString(0, 7,(char *)oledDisp,12, 0);
+	}
+	else if(page == 20)
+	{
+		sprintf((char *)oledDisp,"    MAG CAIL "); 
+		OLED_ShowString(0, 0,(char *)oledDisp,12, 0);
+	
+	}
 
 }
 

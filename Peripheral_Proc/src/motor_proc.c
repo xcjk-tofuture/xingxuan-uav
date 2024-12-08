@@ -10,12 +10,12 @@ osThreadId MotorTaskHandle;
 
 
 
-
+//5通道 1000是锁定  内8打杆后1500是飞行（自稳）2000是飞行（定高）  8通道 1000是 正常  1500是紧急停机
 
 u8 uavSafeFlag = LOCKED;
 u8 uavAutoTakeOffFlag = 0;
 u32 unlockCount = 0;
-
+extern u8 remoteCaliFlag;
 void Motor_Task_Proc(void const * argument)
 {
 	TIM1->CCR1 = 1000;
@@ -25,7 +25,7 @@ void Motor_Task_Proc(void const * argument)
 	UAV_Control_Init(&uav_control_data);
 	osDelay(5000);
   for(;;)
-  {
+  { 
 		if(CAL_SBUS_CH.Connect_State == 1)
     {
 			//printf("State :%d\r\n", uavSafeFlag);
@@ -72,20 +72,26 @@ void Motor_Task_Proc(void const * argument)
 					TIM1->CCR4 = 1000;
 					break;
 			}
-			aux_channel_proc();
-			if(lock_unlock_proc())
+			
+			if(!remoteCaliFlag)
 			{
-				if(uavSafeFlag == LOCKED && unlockCount >= 200)
+				aux_channel_proc();
+				if(lock_unlock_proc())
 				{
-					uavSafeFlag = UNLOCKED;
-					unlockCount = 0;
-				}
-				else if(uavSafeFlag == UNLOCKED && unlockCount >= 200)
-				{
-					uavSafeFlag = LOCKED;
-					unlockCount = 0;
+					if(uavSafeFlag == LOCKED && unlockCount >= 200)
+					{
+						uavSafeFlag = UNLOCKED;
+						unlockCount = 0;
+					}
+					else if(uavSafeFlag == UNLOCKED && unlockCount >= 200)
+					{
+						uavSafeFlag = LOCKED;
+						unlockCount = 0;
+					}
 				}
 			}
+			
+
 			
 		}
 		else

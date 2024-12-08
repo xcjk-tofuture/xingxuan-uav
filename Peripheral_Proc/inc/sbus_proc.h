@@ -77,6 +77,6 @@ u16 Sbus_To_Pwm(u16 sbus_value);
 float Sbus_To_Range(u16 sbus_value, float p_min, float p_max, u16 ch_min, u16 ch_max);
 
 void Channel_Param_Init();
-
+void Remote_Channel_Calibration();
 
 #endif

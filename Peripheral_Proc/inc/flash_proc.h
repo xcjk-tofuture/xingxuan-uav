@@ -1,10 +1,10 @@
 
 #ifndef __FLASH_PROC_H__
 #define __FLASH_PROC_H__
-
+#include "main.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "main.h"
+
 #include "cmsis_os.h"
 #include "timers.h"
 #include "parameter.h"
@@ -19,7 +19,12 @@
 
 void W25q32_Task_Proc(void const * argument);
 
-
+void UAV_Read_Param_IMU(_imuData_all* imu_data);
+void UAV_Read_Param_Remote(_sbus_ch_struct* channe_data);
+void UAV_Read_Param_Motor(_uav_control_data* motor_data);
+void UAV_Write_Param_Motor(_uav_control_data motor_data);
+void UAV_Write_Param_Remote(_sbus_ch_struct channe_data);
+void UAV_Write_Param_IMU(_imuData_all imu_data);
 
 
 #define W25QXX_SPI_Handle (&hspi1)
@@ -37,12 +42,11 @@ void W25q32_Task_Proc(void const * argument);
 #define W25Q128 0XEF17
 
 
+#define W25QXX_CS_L()  HAL_GPIO_WritePin(FLASH_CS_GPIO_Port, FLASH_CS_Pin, GPIO_PIN_RESET)
+#define W25QXX_CS_H()  HAL_GPIO_WritePin(FLASH_CS_GPIO_Port, FLASH_CS_Pin, GPIO_PIN_SET)
 
 
 
-extern uint16_t W25QXX_TYPE;
-extern uint32_t W25QXX_SIZE;
-extern uint8_t  W25QXX_UID[8];
 
 
 //
@@ -80,8 +84,6 @@ void W25QXX_Wait_Busy(void);            //等待空闲
 void W25QXX_PowerDown(void);          //进入掉电模式
 void W25QXX_WAKEUP(void);       //唤醒
 uint32_t W25QXX_ReadCapacity(void);
-
-
 
 
 

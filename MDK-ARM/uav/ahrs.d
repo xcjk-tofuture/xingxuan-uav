@@ -51,19 +51,16 @@ uav/ahrs.o: ..\Peripheral_Proc\src\AHRS.c ..\Peripheral_Proc\inc\AHRS.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
   ..\Core\Inc\parameter.h ..\Peripheral_Proc\inc\Attitude_Sensor\SPL06.h \
-  ..\Core\Inc\spi.h ..\Peripheral_Proc\inc\Attitude_Sensor\AK8975.h \
+  ..\Core\Inc\spi.h F:\KEIL\ARM\ARMCLANG\Bin\..\include\math.h \
+  ..\Peripheral_Proc\inc\Attitude_Sensor\AK8975.h \
   ..\MATH_Tools\inc\mathTool.h \
   F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdlib.h \
   F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdbool.h \
-  F:\KEIL\ARM\ARMCLANG\Bin\..\include\math.h ..\MATH_Tools\inc\vector3.h \
-  ..\MATH_Tools\inc\rotation.h \
+  ..\MATH_Tools\inc\vector3.h ..\MATH_Tools\inc\rotation.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\BMI088_1.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\bmi088reg.h \
-  ..\Peripheral_Proc\inc\flash_proc.h \
+  ..\Peripheral_Proc\inc\oled_proc.h ..\Peripheral_Proc\inc\oledfont.h \
+  ..\Peripheral_Proc\inc\sbus_proc.h \
   F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdio.h \
-  F:\KEIL\ARM\ARMCLANG\Bin\..\include\string.h \
-  ..\Peripheral_Proc\inc\motor_proc.h ..\Peripheral_Proc\inc\sbus_proc.h \
-  ..\MATH_Tools\inc\PID.h ..\Peripheral_Proc\inc\oled_proc.h \
-  ..\Core\Inc\usart.h ..\Peripheral_Proc\inc\oledfont.h \
   ..\MATH_Tools\inc\lowPassFilter.h ..\MATH_Tools\inc\matrix6.h \
-  ..\Core\Inc\tim.h
+  ..\MATH_Tools\inc\pid.h ..\Core\Inc\tim.h

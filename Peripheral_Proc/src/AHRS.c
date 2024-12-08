@@ -10,7 +10,7 @@
 #define DEG_PER_RAD     57.29577951f
 
 
-#define EXTERN_IMU 1
+#define EXTERN_IMU 0
 
 #define SENSORS_ENABLE_SPL06 1;
 #define UPDATE_TIME 5
@@ -58,6 +58,10 @@ void Sensor_Data_Task_Proc(void const * argument)
 	osDelay(2000);
 	#if !EXTERN_IMU
 	Sensors_Init();  //´«¸ÐÆ÷³õÊ¼»¯
+	#else
+	#ifdef SENSORS_ENABLE_SPL06
+		SPL06Flag				=	Drv_Spl0601_Init();
+	#endif
 	#endif
 
 	
@@ -67,8 +71,8 @@ void Sensor_Data_Task_Proc(void const * argument)
  for(;;)
 	{
 		
-		vTaskDelayUntil(&xLastWakeTime, 1); //¾ø¶ÔÑÓÊ±
-		sensorTimeCount ++;
+	vTaskDelayUntil(&xLastWakeTime, 1); //¾ø¶ÔÑÓÊ±
+	sensorTimeCount ++;
 	#if !EXTERN_IMU
 	
 	if(sensorTimeCount % 3 == 0)
@@ -79,15 +83,14 @@ void Sensor_Data_Task_Proc(void const * argument)
 		ReadGyroData(&test_gyro);
 
 	}
-		
+	#endif	
 	if(sensorTimeCount % UPDATE_TIME == 0)
 	{
+		
+		imudata_all.Pressure = Drv_SPl0601_Read();
+		//Spl0601Get(&imudata_all.Hight);
+	#if !EXTERN_IMU
 		ReadMagData(&test_mag);
-		
-		Spl0601Get(&imudata_all.Pressure);
-		
-		//printf("%0.1f  %0.1f  %0.1f \r\n", test_mag.x, test_mag.y, test_mag.z);
-		//printf("%0.1f  %0.1f  %0.1f \r\n", attitude_t.roll, attitude_t.pitch, attitude_t.yaw);
 		IMU_Update(test_acc, test_gyro, test_mag, &imudata_all);
 	 if(!(AccCalFlag || GyroCalFlag))	
 	 {
@@ -102,13 +105,15 @@ void Sensor_Data_Task_Proc(void const * argument)
 		if(sensorTimeCount == CALIBRATION_COUNT * UPDATE_TIME)
 			Cold_Start_ARHS(imudata_all, &attitude_t);
 	 }
-	
+	#endif
 	}
 
-
+	
 		 //´«¸ÐÆ÷
 		//FlashTest = W25QXX_ReadID();
-	#endif
+	
+	
+	
 	}
 
 }
@@ -375,13 +380,13 @@ void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _i
 //	imu->acc.y =imu->acc.y * (1 - 0.9) + acc.y * 0.9;
 //	imu->acc.z =imu->acc.z * (1 - 0.9) + acc.z * 0.9; //Ò»½×µÍÍ¨ÂË²¨33	
 	
-	gyro.roll = gyro.roll - imu->gyrooffsetbias.x;
-	gyro.pitch = gyro.pitch - imu->gyrooffsetbias.y;
-	gyro.yaw = gyro.yaw - imu->gyrooffsetbias.z;
+//	gyro.roll = gyro.roll - imu->gyrooffsetbias.x;
+//	gyro.pitch = gyro.pitch - imu->gyrooffsetbias.y;
+//	gyro.yaw = gyro.yaw - imu->gyrooffsetbias.z;
 	
-	imu->gyro.pitch =imu->gyro.pitch * (1 - 0.3) +  gyro.pitch * 0.3;
-	imu-> gyro.roll =imu-> gyro.roll * (1 - 0.3) +  gyro.roll * 0.3;
-	imu-> gyro.yaw =imu-> gyro.yaw * (1 - 0.3) +  gyro.yaw * 0.3; //Ò»½×µÍÍ¨ÂË²¨33	
+//	imu->gyro.pitch =imu->gyro.pitch * (1 - 0.3) +  gyro.pitch * 0.3;
+//	imu-> gyro.roll =imu-> gyro.roll * (1 - 0.3) +  gyro.roll * 0.3;
+//	imu-> gyro.yaw =imu-> gyro.yaw * (1 - 0.3) +  gyro.yaw * 0.3; //Ò»½×µÍÍ¨ÂË²¨33	
 	
 	
 	
@@ -414,9 +419,9 @@ void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _i
 	LowPassFilter2ndFactorCal(UPDATE_TIME, 50, &LPF2_ACC);
 	LPF2_ACC_Data = LowPassFilter2nd(&LPF2_ACC, LPF2_ACC_Data);     //ÍÓÂÝÒÇ¶þ½×µÍÍ¨ÂË²¨ ½ØÖ¹ÆµÂÊ50HZ
 	
-//	imu->gyro.pitch = LPF2_GYRO_Data.y;
-//	imu->gyro.roll =  LPF2_GYRO_Data.x;
-//	imu->gyro.yaw =  LPF2_GYRO_Data.z;   //¼õÈ¥ÁãÆ«Îó²î
+	imu->gyro.pitch = LPF2_GYRO_Data.y;
+	imu->gyro.roll =  LPF2_GYRO_Data.x;
+	imu->gyro.yaw =  LPF2_GYRO_Data.z;   //¼õÈ¥ÁãÆ«Îó²î
 	
   imu->acc.x = LPF2_ACC_Data.x;
 	imu->acc.y = LPF2_ACC_Data.y;

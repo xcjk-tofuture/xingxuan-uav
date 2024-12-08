@@ -6,12 +6,10 @@
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
-#include "spi.h"
-#include "AK8975.h"
-#include "BMI088_1.h"
-#include "usart.h"
-#include "vector3.h"
+#include "oledfont.h"
+
 #include "AHRS.h"
+#include "sbus_proc.h"
 //Oled port macro definition
 //OLED¶Ë¿Úºê¶¨Òå
 /*
@@ -24,8 +22,7 @@
 #ifndef __OLED_H__
 #define __OLED_H__
  
-#include "main.h"
-#include "oledfont.h"
+
  
 extern SPI_HandleTypeDef  hspi1;
  
@@ -64,6 +61,7 @@ void OLED_DrawDot(uint8_t x,uint8_t y);
 void OLED_Draw_XLine(uint8_t x,uint8_t y,int length);
 void OLED_Draw_YLine(uint8_t x,uint8_t y,int length);
  
+void Show_Data(u8 page);
  
 #endif 
 

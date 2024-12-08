@@ -8,7 +8,7 @@
 #include "timers.h"
 #include "parameter.h"
 #include "spi.h"
-
+#include "math.h"
 
 #define uint32 unsigned int
 	
@@ -45,7 +45,7 @@ uint8_t Drv_Spl0601_Init(void);
 void Spl0601Get(float *Hight);
 int32_t GetTemputer(void);
 float Get_Altitude_SPL06_001(float baroPress);
-
+float Drv_SPl0601_Read ( void );
 
 
 

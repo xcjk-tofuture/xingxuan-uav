@@ -32,18 +32,11 @@
 
  osThreadId OLEDTaskHandle;
 
-// extern mag_raw_data_t test_mag;
-// extern acc_raw_data_t test_acc;
-// extern gyro_raw_data_t test_gyro;
 extern _imuData_all imudata_all;
 extern _ahrs_data attitude_t;
-
-
-
-extern u8 Bmi088Init_Flag;    //bmi088初始化
-extern u8 AK8975Flag;    //AK8975初始化
-extern u8 SPL06Flag;    //AK8975初始化
-
+extern _sbus_ch_cal_struct CAL_SBUS_CH;
+extern _sbus_ch_struct SBUS_CH;
+u8 displayPage = 1;
 
  void OLED_Task_Proc(void const * argument)           //OLED进程主程序
 {
@@ -52,26 +45,12 @@ extern u8 SPL06Flag;    //AK8975初始化
 	u8 oledDisp[40];
   for(;;)
   {
-
+		Show_Data(displayPage);
 		//HAL_UART_Transmit(&huart1, (u8 *)"2233", 6, 50);
 		//上面的初始化以及清屏的代码在一开始处一定要写
 		//OLED_ShowString(0,0,"xcjk",16, 0);    //反相显示8X16字符串
 
-		sprintf((char *)oledDisp,"%0.1f %0.1f %0.1f     ",attitude_t.roll, attitude_t.pitch, attitude_t.yaw); 
-		OLED_ShowString(0,0,(char *)oledDisp,12, 0);  
 
-		//OLED_ShowString(0,4,"unicorn_li_123",12,0);//正相显示6X8字符串
-		sprintf((char *)oledDisp, "TEMP%0.2f   %0.2f    ",imudata_all.f_temperature, imudata_all.Pressure);
-		
-		OLED_ShowString(0, 3 ,(char *)oledDisp ,12, 0);
-		sprintf((char *)oledDisp, "%.2f   %.2f     " , imudata_all.gyro.roll, imudata_all.acc.x);
-		OLED_ShowString(0, 4 ,(char *)oledDisp , 12, 0);
-		sprintf((char *)oledDisp, "%.2f   %.2f     " , imudata_all.gyro.pitch, imudata_all.acc.y);
-		OLED_ShowString(0, 5 ,(char *)oledDisp , 12, 0);
-		sprintf((char *)oledDisp, "%.2f   %.2f     ", imudata_all.gyro.yaw, imudata_all.acc.z);
-		OLED_ShowString(0, 6 ,(char *)oledDisp    , 12, 0);
-		sprintf((char *)oledDisp, "%0.1f  %0.1f  %0.1f   ", imudata_all.mag.x, imudata_all.mag.y, imudata_all.mag.z);
-		OLED_ShowString(0, 7 ,(char *)oledDisp    , 12, 0);
 		osDelay(100);
 
   }
@@ -79,7 +58,57 @@ extern u8 SPL06Flag;    //AK8975初始化
 }
  
  
- 
+void Show_Data(u8 page)
+{
+	  u8 oledDisp[120];
+	if(page == 1)
+	{
+	  sprintf((char *)oledDisp,"PAGE 1  IMU DATA "); 
+		OLED_ShowString(0, 0,(char *)oledDisp,12, 0); 
+		sprintf((char *)oledDisp,"R:%0.1f P:%0.1f Y:%0.1f     ",attitude_t.roll, attitude_t.pitch, attitude_t.yaw); 
+		OLED_ShowString(0, 1,(char *)oledDisp,12, 0);  
+	  sprintf((char *)oledDisp, "TEMP%0.1f BA:%0.1f  ",  imudata_all.f_temperature, imudata_all.Pressure);
+		OLED_ShowString(0, 2 ,(char *)oledDisp ,12, 0);
+		sprintf((char *)oledDisp, "GX %.2f AX %.2f     " , imudata_all.gyro.roll, imudata_all.acc.x);
+		OLED_ShowString(0, 3 ,(char *)oledDisp , 12, 0);
+		sprintf((char *)oledDisp, "GY %.2f AY %.2f     " , imudata_all.gyro.pitch, imudata_all.acc.y);
+		OLED_ShowString(0, 4 ,(char *)oledDisp , 12, 0);
+		sprintf((char *)oledDisp, "GZ %.2f AZ %.2f     ",  imudata_all.gyro.yaw, imudata_all.acc.z);
+		OLED_ShowString(0, 5 ,(char *)oledDisp    , 12, 0);
+		sprintf((char *)oledDisp, "MX %0.1f MY%0.1f MZ%0.1f   ", imudata_all.mag.x, imudata_all.mag.y, imudata_all.mag.z);
+		OLED_ShowString(0, 6 ,(char *)oledDisp    , 12, 0);
+	}
+	else if(page == 2)
+	{
+//		sprintf((char *)oledDisp,"PAGE 2  REMOTE DATA "); 
+//		OLED_ShowString(0, 0,(char *)oledDisp,12, 0);
+		
+		sprintf((char *)oledDisp,"C1 %d %d %d %d ", CAL_SBUS_CH.CAL_CH1, SBUS_CH.CH1, SBUS_CH.CH1_MAX, SBUS_CH.CH1_MIN); 
+		OLED_ShowString(0, 0,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"C2 %d %d %d %d ", CAL_SBUS_CH.CAL_CH2, SBUS_CH.CH2, SBUS_CH.CH2_MAX, SBUS_CH.CH2_MIN); 
+		OLED_ShowString(0, 1,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"C3 %d %d %d %d ", CAL_SBUS_CH.CAL_CH3, SBUS_CH.CH3, SBUS_CH.CH3_MAX, SBUS_CH.CH3_MIN); 
+		OLED_ShowString(0, 2,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"C4 %d %d %d %d ", CAL_SBUS_CH.CAL_CH4, SBUS_CH.CH4, SBUS_CH.CH4_MAX, SBUS_CH.CH4_MIN); 
+		OLED_ShowString(0, 3,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"C5 %d %d %d %d ", CAL_SBUS_CH.CAL_CH5, SBUS_CH.CH5, SBUS_CH.CH5_MAX, SBUS_CH.CH5_MIN); 
+		OLED_ShowString(0, 4,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"C6 %d %d %d %d ", CAL_SBUS_CH.CAL_CH6, SBUS_CH.CH6, SBUS_CH.CH6_MAX, SBUS_CH.CH6_MIN); 
+		OLED_ShowString(0, 5,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"C7 %d %d %d %d ", CAL_SBUS_CH.CAL_CH7, SBUS_CH.CH7, SBUS_CH.CH7_MAX, SBUS_CH.CH7_MIN); 
+		OLED_ShowString(0, 6,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"C8 %d %d %d %d ", CAL_SBUS_CH.CAL_CH8, SBUS_CH.CH8, SBUS_CH.CH8_MAX, SBUS_CH.CH8_MIN); 
+		OLED_ShowString(0, 7,(char *)oledDisp,12, 0);
+	}
+
+
+}
+
+
+
+
+
+
  
 /**********************************************************
  * 初始化命令,根据芯片手册书写

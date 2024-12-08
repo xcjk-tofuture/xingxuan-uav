@@ -14,21 +14,22 @@ _sbus_ch_struct SBUS_CH;
 
 void Sbus_Uart6_Task_Proc(void const * argument)
 {
+	Channel_Param_Init();
 	for(;;)
 	{
 //	TIM1->CCR1 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000);
 //	TIM1->CCR2 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000);
 //	TIM1->CCR3 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000);
 //	TIM1->CCR4 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000);
-		CAL_SBUS_CH.CAL_CH1 = Sbus_To_Range(SBUS_CH.CH1, 1000, 2000);
-		CAL_SBUS_CH.CAL_CH2 = Sbus_To_Range(SBUS_CH.CH2, 1000, 2000);
-		CAL_SBUS_CH.CAL_CH3 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000);
-		CAL_SBUS_CH.CAL_CH4 = Sbus_To_Range(SBUS_CH.CH4, 1000, 2000);	
+		CAL_SBUS_CH.CAL_CH1 = Sbus_To_Range(SBUS_CH.CH1, 1000, 2000, SBUS_CH.CH1_MIN, SBUS_CH.CH1_MAX);
+		CAL_SBUS_CH.CAL_CH2 = Sbus_To_Range(SBUS_CH.CH2, 1000, 2000, SBUS_CH.CH2_MIN, SBUS_CH.CH2_MAX);
+		CAL_SBUS_CH.CAL_CH3 = Sbus_To_Range(SBUS_CH.CH3, 1000, 2000, SBUS_CH.CH3_MIN, SBUS_CH.CH3_MAX);
+		CAL_SBUS_CH.CAL_CH4 = Sbus_To_Range(SBUS_CH.CH4, 1000, 2000, SBUS_CH.CH4_MIN, SBUS_CH.CH4_MAX);	
 		
-		CAL_SBUS_CH.CAL_CH5 = Sbus_To_Range(SBUS_CH.CH5, 1000, 2000);
-		CAL_SBUS_CH.CAL_CH6 = Sbus_To_Range(SBUS_CH.CH6, 1000, 2000);
-		CAL_SBUS_CH.CAL_CH7 = Sbus_To_Range(SBUS_CH.CH7, 1000, 2000);
-		CAL_SBUS_CH.CAL_CH8 = Sbus_To_Range(SBUS_CH.CH8, 1000, 2000);	
+		CAL_SBUS_CH.CAL_CH5 = Sbus_To_Range(SBUS_CH.CH5, 1000, 2000, SBUS_CH.CH1_MIN, SBUS_CH.CH1_MAX);
+		CAL_SBUS_CH.CAL_CH6 = Sbus_To_Range(SBUS_CH.CH6, 1000, 2000, SBUS_CH.CH2_MIN, SBUS_CH.CH2_MAX);
+		CAL_SBUS_CH.CAL_CH7 = Sbus_To_Range(SBUS_CH.CH7, 1000, 2000, SBUS_CH.CH3_MIN, SBUS_CH.CH3_MAX);
+		CAL_SBUS_CH.CAL_CH8 = Sbus_To_Range(SBUS_CH.CH8, 1000, 2000, SBUS_CH.CH4_MIN, SBUS_CH.CH4_MAX);	
 		CAL_SBUS_CH.Connect_State = SBUS_CH.Connect_State;
 		osDelay(200);
 //  TIM1->CCR1 = 1500;	
@@ -61,6 +62,35 @@ void Sbus_Uart6_Task_Proc(void const * argument)
 	}
 }
 
+
+void Channel_Param_Init()
+{
+  SBUS_CH.CH1_MIN = 353;
+	SBUS_CH.CH1_MAX = 1697;
+	
+	SBUS_CH.CH2_MIN = 353;
+	SBUS_CH.CH2_MAX = 1697;
+	
+	SBUS_CH.CH3_MIN = 353;
+	SBUS_CH.CH3_MAX = 1697;
+	
+	
+	SBUS_CH.CH4_MIN = 353;
+	SBUS_CH.CH4_MAX = 1697;
+	
+	SBUS_CH.CH5_MIN = 353;
+	SBUS_CH.CH5_MAX = 1697;
+	
+	SBUS_CH.CH6_MIN = 353;
+	SBUS_CH.CH6_MAX = 1697;
+	
+	SBUS_CH.CH7_MIN = 353;
+	SBUS_CH.CH7_MAX = 1697;
+	
+	SBUS_CH.CH8_MIN = 353;
+	SBUS_CH.CH8_MAX = 1697;
+
+}
 
 void Sbus_Uart6_IDLE_Proc(uint16_t Size)
 {
@@ -120,10 +150,10 @@ void Sbus_Channels_Proc(void)          //½âÎösbusº¯Êý
 }
 
  
-float Sbus_To_Range(u16 sbus_value, float p_min, float p_max)
+float Sbus_To_Range(u16 sbus_value, float p_min, float p_max, u16 ch_min, u16 ch_max)
 {
     float p;
-    p = p_min + (float)(sbus_value - SBUS_RANGE_MIN) * (p_max-p_min)/(float)(SBUS_RANGE_MAX - SBUS_RANGE_MIN);  
+    p = p_min + (float)(sbus_value - ch_min) * (p_max-p_min)/(float)(ch_max - ch_min);  
     if (p > p_max) p = p_max;
     if (p < p_min) p = p_min;
     return p;

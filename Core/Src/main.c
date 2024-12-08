@@ -67,7 +67,7 @@ u8 uart5TX[200];
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+extern void W25QXX_Init(); 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

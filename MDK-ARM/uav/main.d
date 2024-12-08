@@ -55,17 +55,14 @@ uav/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Core\Inc\gpio.h ..\Peripheral_Proc\inc\sbus_proc.h \
   ..\Core\Inc\parameter.h F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdio.h \
   ..\Peripheral_Proc\inc\led_proc.h ..\Peripheral_Proc\inc\oled_proc.h \
+  ..\Peripheral_Proc\inc\oledfont.h ..\Peripheral_Proc\inc\AHRS.h \
+  ..\Peripheral_Proc\inc\Attitude_Sensor\SPL06.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\math.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\AK8975.h \
   ..\MATH_Tools\inc\mathTool.h \
   F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdlib.h \
   F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdbool.h \
-  F:\KEIL\ARM\ARMCLANG\Bin\..\include\math.h ..\MATH_Tools\inc\vector3.h \
-  ..\MATH_Tools\inc\rotation.h \
+  ..\MATH_Tools\inc\vector3.h ..\MATH_Tools\inc\rotation.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\BMI088_1.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\bmi088reg.h \
-  ..\Peripheral_Proc\inc\AHRS.h \
-  ..\Peripheral_Proc\inc\Attitude_Sensor\SPL06.h \
-  ..\Peripheral_Proc\inc\flash_proc.h \
-  F:\KEIL\ARM\ARMCLANG\Bin\..\include\string.h \
-  ..\Peripheral_Proc\inc\motor_proc.h ..\MATH_Tools\inc\PID.h \
-  ..\Peripheral_Proc\inc\oledfont.h
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\string.h

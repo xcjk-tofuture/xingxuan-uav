@@ -51,4 +51,5 @@ uav/spl06.o: ..\Peripheral_Proc\src\Attitude_Sensor\SPL06.C \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\Core\Inc\parameter.h ..\Core\Inc\spi.h
+  ..\Core\Inc\parameter.h ..\Core\Inc\spi.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\math.h

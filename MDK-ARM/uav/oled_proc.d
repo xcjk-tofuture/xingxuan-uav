@@ -51,18 +51,15 @@ uav/oled_proc.o: ..\Peripheral_Proc\src\oled_proc.c \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\queue.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\semphr.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\event_groups.h \
-  ..\Core\Inc\spi.h ..\Peripheral_Proc\inc\Attitude_Sensor\AK8975.h \
-  ..\Core\Inc\parameter.h ..\MATH_Tools\inc\mathTool.h \
+  ..\Peripheral_Proc\inc\oledfont.h ..\Peripheral_Proc\inc\AHRS.h \
+  ..\Core\Inc\parameter.h ..\Peripheral_Proc\inc\Attitude_Sensor\SPL06.h \
+  ..\Core\Inc\spi.h F:\KEIL\ARM\ARMCLANG\Bin\..\include\math.h \
+  ..\Peripheral_Proc\inc\Attitude_Sensor\AK8975.h \
+  ..\MATH_Tools\inc\mathTool.h \
   F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdlib.h \
   F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdbool.h \
-  F:\KEIL\ARM\ARMCLANG\Bin\..\include\math.h ..\MATH_Tools\inc\vector3.h \
-  ..\MATH_Tools\inc\rotation.h \
+  ..\MATH_Tools\inc\vector3.h ..\MATH_Tools\inc\rotation.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\BMI088_1.h \
-  ..\Peripheral_Proc\inc\Attitude_Sensor\bmi088reg.h ..\Core\Inc\usart.h \
-  ..\Peripheral_Proc\inc\AHRS.h \
-  ..\Peripheral_Proc\inc\Attitude_Sensor\SPL06.h \
-  ..\Peripheral_Proc\inc\flash_proc.h \
-  F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdio.h \
-  F:\KEIL\ARM\ARMCLANG\Bin\..\include\string.h \
-  ..\Peripheral_Proc\inc\motor_proc.h ..\Peripheral_Proc\inc\sbus_proc.h \
-  ..\MATH_Tools\inc\PID.h ..\Peripheral_Proc\inc\oledfont.h
+  ..\Peripheral_Proc\inc\Attitude_Sensor\bmi088reg.h \
+  ..\Peripheral_Proc\inc\sbus_proc.h \
+  F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdio.h

@@ -10,7 +10,7 @@
 #include "SPL06.h"
 #include "AK8975.h"
 #include "BMI088_1.h"
-#include "flash_proc.h"
+
 //==ÒýÓÃ
 
 
@@ -61,7 +61,7 @@ typedef struct
 	
 	float f_temperature;
   float Pressure;
-	
+	float Hight;
 } _imuData_all;
 
 

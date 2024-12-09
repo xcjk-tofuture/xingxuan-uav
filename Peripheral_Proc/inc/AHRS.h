@@ -10,7 +10,7 @@
 #include "SPL06.h"
 #include "AK8975.h"
 #include "BMI088_1.h"
-
+#include "math.h"
 //==引用
 
 
@@ -125,6 +125,8 @@ void AHRS_Kalman_Update(_imuData_all imu, _ahrs_data *attitude);
 
 
 void Sensor_Calibration(_imuData_all* imu);
+
+void Mag_Zero_Offset_Calibration(_imuData_all* imu);
 
 void Simple_Zero_Offset_Calibration(_imuData_all* imu, Vector3f_t * offset);  //简单零偏校准
 

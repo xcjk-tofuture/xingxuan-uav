@@ -35,14 +35,12 @@ void Key_Task_Proc(void const * argument)
 			{ //长按逻辑处理
 				if(remoteCaliFlag)
 				{
-					OLED_Clear();
 					displayPage = 1;
 					remoteCaliSaveFlashFlag = 1;
 				}
 					
 				if(remoteCaliFlag == 0)
 				{
-					OLED_Clear();
 					displayPage = 19;
 					remoteCaliFlag = 1;  //校准遥控器
 				}
@@ -52,9 +50,9 @@ void Key_Task_Proc(void const * argument)
 			
 			if(keyDown == 1)
 			{
-				if(++displayPage > 2)
+				if(++displayPage > 3)
 				{
-					OLED_Clear();
+					
 					displayPage = 1;
 				}
 					

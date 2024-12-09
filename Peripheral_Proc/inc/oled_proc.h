@@ -8,6 +8,7 @@
 #include "cmsis_os.h"
 #include "oledfont.h"
 
+#include "flow_proc.h"
 #include "AHRS.h"
 #include "sbus_proc.h"
 //Oled port macro definition
@@ -62,7 +63,7 @@ void OLED_Draw_XLine(uint8_t x,uint8_t y,int length);
 void OLED_Draw_YLine(uint8_t x,uint8_t y,int length);
  
 void Show_Data(u8 page);
- 
+void OLED_Auto_Clear();
 #endif 
 
 

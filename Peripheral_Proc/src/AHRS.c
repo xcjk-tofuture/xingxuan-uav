@@ -99,7 +99,10 @@ void Sensor_Data_Task_Proc(void const * argument)
 		//AHRS_Kalman_Update(imudata_all, &attitude_t);  
 		AHRS_Mahony_Update(imudata_all, &attitude_t);
 	 }
-
+	 else if(MagCalFlag == 1)
+	 {
+		Mag_Zero_Offset_Calibration(&imudata_all);
+	 }
 	 else
 	 {	
 		//printf("CALLING... \r\n");
@@ -208,32 +211,39 @@ void Mag_Zero_Offset_Calibration(_imuData_all* imu)
 				gyroRoll += imu->gyro.roll * (UPDATE_TIME / 1000.f);
 				magXMax = magXMax > imu->mag.x ? magXMax : imu->mag.x;
 				magXMin = magXMin < imu->mag.x ? magXMin : imu->mag.x;
-			  if(gyroRoll >= PI * 2.0f)
+			  if(gyroRoll >= PI * 2.0f ||  gyroRoll <= PI * -2.0f)
 					magCalistep = 1;
 				break;
 			case 1:
+				imu->magoffsetbias.x = (magXMax + magXMin)  / 2;
 				gyroPitch += imu->gyro.pitch * (UPDATE_TIME / 1000.f);
 				magYMax = magYMax > imu->mag.y ? magYMax : imu->mag.y;
 				magYMin = magYMin < imu->mag.y ? magYMin : imu->mag.y;
-			  if(gyroPitch >= PI * 2.0f)
+			  if(gyroPitch >= PI * 2.0f || gyroPitch <= PI * -2.0f)
 					magCalistep = 2;
 				break;
 			case 2:
+				imu->magoffsetbias.y = (magYMax + magYMin)  / 2;
 				gyroYaw += imu->gyro.yaw * (UPDATE_TIME / 1000.f);
 				magZMax = magZMax > imu->mag.z ? magZMax : imu->mag.z;
 				magZMin = magZMin < imu->mag.z ? magZMin : imu->mag.z;
-			  if(gyroYaw >= PI * 2.0f)
+			  if((gyroYaw) >= PI * 2.0f || (gyroYaw) <= PI * -2.0f)
 					magCalistep = 3;
 				break;
 			case 3:
-				imu->magoffsetbias.x = (magXMax + magXMin)  / 2;
-				imu->magoffsetbias.y = (magYMax + magYMin)  / 2;
 				imu->magoffsetbias.z = (magZMax + magZMin)  / 2;
-				magCalistep = 0;
+				
 			  gyroRoll = 0;
 				gyroPitch = 0;
 				gyroYaw = 0;
 				UAV_Write_Param_IMU(*imu); //Ð´ÈëÊý¾Ý
+				osDelay(1000);
+				magCalistep = 4;
+				break;
+			case 4:
+				osDelay(1000);
+				magCalistep = 0;
+				MagCalFlag = 0;
 				break;
 		}
 }

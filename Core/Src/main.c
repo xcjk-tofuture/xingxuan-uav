@@ -38,6 +38,7 @@
 #include "oled_proc.h"
 #include "parameter.h"
 #include "AHRS.h"
+#include "flow_proc.h"
 #include "string.h"
 /* USER CODE END Includes */
 
@@ -224,7 +225,8 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 	}	
 	else if(huart->Instance == USART2)
 	{
-		HAL_UART_Transmit(&huart2, uart2RX, Size, 50);
+		//HAL_UART_Transmit(&huart2, uart2RX, Size, 50);
+		Flow_Data_Proc(Size);
 		HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2RX, 200);		
 	}
 	else if(huart->Instance == USART3)
@@ -280,6 +282,14 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 //因为HAL_UART_Receive_IT执行时需判断如果是lock则直接返回BUSY
 		__HAL_UNLOCK(huart);		
 		HAL_UARTEx_ReceiveToIdle_DMA(&huart4, uart4RX, 100);	//SBUS接受 串口通信初始化
+	}
+	
+	if(huart == &huart2)
+	{
+//执行HAL_UART_ErrorCallback时，还处于lock，需先unlock，
+//因为HAL_UART_Receive_IT执行时需判断如果是lock则直接返回BUSY
+		__HAL_UNLOCK(huart);		
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2RX, 100);	//SBUS接受 串口通信初始化
 	}
 
 }

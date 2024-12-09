@@ -36,8 +36,11 @@ extern _imuData_all imudata_all;
 extern _ahrs_data attitude_t;
 extern _sbus_ch_cal_struct CAL_SBUS_CH;
 extern _sbus_ch_struct SBUS_CH;
+extern _flow_data upixels_flow_T2_data;
 u8 displayPage = 1;
 
+
+extern u8 magCalistep;
  void OLED_Task_Proc(void const * argument)           //OLED进程主程序
 {
   /* USER CODE BEGIN RGB_Task_Proc */
@@ -46,6 +49,7 @@ u8 displayPage = 1;
 	OLED_Clear();
   for(;;)
   {
+		OLED_Auto_Clear();
 		Show_Data(displayPage);
 		//HAL_UART_Transmit(&huart1, (u8 *)"2233", 6, 50);
 		//上面的初始化以及清屏的代码在一开始处一定要写
@@ -58,6 +62,17 @@ u8 displayPage = 1;
   /* USER CODE END RGB_Task_Proc */
 }
  
+
+void OLED_Auto_Clear()
+{
+	static u8 lastPage;
+	
+	if(displayPage != lastPage)
+	{
+			OLED_Clear();
+	}
+	lastPage =displayPage;
+}
  
 void Show_Data(u8 page)
 {
@@ -101,6 +116,23 @@ void Show_Data(u8 page)
 		sprintf((char *)oledDisp,"Ch8 %04d %04d       ", CAL_SBUS_CH.CAL_CH8, SBUS_CH.CH8); 
 		OLED_ShowString(0, 7,(char *)oledDisp,12, 0);
 	}
+	else if(page == 3)
+	{
+		sprintf((char *)oledDisp,"PAGE  3   FLOW DATA   "); 
+		OLED_ShowString(0, 0,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"TYPE Upixels          "); 
+		OLED_ShowString(0, 1,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"Vx:%+6.2fmm/s   ", upixels_flow_T2_data.xFlowVel); 
+		OLED_ShowString(0, 2,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"Vy:%+6.2fmm/s   ", upixels_flow_T2_data.yFlowVel);  
+		OLED_ShowString(0, 3,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"Vz:%+6.2fmm/s   ", upixels_flow_T2_data.zFlowVel); 
+		OLED_ShowString(0, 4,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"H:%05d mm       ", upixels_flow_T2_data.zNowHeight); 
+		OLED_ShowString(0, 5,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"conf:%02d%%       ", upixels_flow_T2_data.flowConf); 
+		OLED_ShowString(0, 6,(char *)oledDisp,12, 0);
+	}
 
 	
 		else if(page == 19)
@@ -126,7 +158,37 @@ void Show_Data(u8 page)
 	{
 		sprintf((char *)oledDisp,"    MAG CAIL "); 
 		OLED_ShowString(0, 0,(char *)oledDisp,12, 0);
-	
+		
+		sprintf((char *)oledDisp,"MX %+4.1f ", imudata_all.magoffsetbias.x); 
+		OLED_ShowString(0, 5,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"MY %+4.1f ", imudata_all.magoffsetbias.y); 
+		OLED_ShowString(0, 6,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"MZ %+4.1f ", imudata_all.magoffsetbias.z); 
+		OLED_ShowString(0, 7,(char *)oledDisp,12, 0);
+		if(magCalistep == 0)
+		{
+			sprintf((char *)oledDisp,"Rotate along the X"); 
+			OLED_ShowString(0, 1,(char *)oledDisp,12, 0);
+		}
+	  else if(magCalistep == 1)
+		{
+			sprintf((char *)oledDisp,"Rotate along the Y"); 
+			OLED_ShowString(0, 1,(char *)oledDisp,12, 0);
+		}
+		else if(magCalistep == 2)
+		{
+			sprintf((char *)oledDisp,"Rotate along the Z"); 
+			OLED_ShowString(0, 1,(char *)oledDisp,12, 0);
+		}
+			else if(magCalistep == 3)
+		{
+			sprintf((char *)oledDisp,"Cail mag OK Saving"); 
+			OLED_ShowString(0, 1,(char *)oledDisp,12, 0);
+		}	
+		else if(magCalistep == 4)
+		{
+			displayPage = 1;
+		}	
 	}
 
 }

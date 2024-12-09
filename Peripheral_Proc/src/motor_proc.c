@@ -8,8 +8,8 @@ _uav_control_data uav_control_data;
 
 osThreadId MotorTaskHandle;
 
-
-
+extern u8 displayPage ;
+extern u8 MagCalFlag;   //传感器校准标准位
 //5通道 1000是锁定  内8打杆后1500是飞行（自稳）2000是飞行（定高）  8通道 1000是 正常  1500是紧急停机
 
 u8 uavSafeFlag = LOCKED;
@@ -75,6 +75,7 @@ void Motor_Task_Proc(void const * argument)
 			
 			if(!remoteCaliFlag)
 			{
+				mag_cail_proc();
 				aux_channel_proc();
 				if(lock_unlock_proc())
 				{
@@ -182,5 +183,36 @@ u8 lock_unlock_proc()				//上锁解锁处理
 		unlockCount = 0;
 		return 0;
 	}
+}
+
+extern void OLED_Clear();
+void mag_cail_proc()				//上锁解锁处理
+{
+	
+	static u32 magCount;
+	if(MagCalFlag != 1)
+	{
+			if(CAL_SBUS_CH.CAL_CH1 < 2050 && CAL_SBUS_CH.CAL_CH1 > 1950 &&
+		CAL_SBUS_CH.CAL_CH2 < 2050 && CAL_SBUS_CH.CAL_CH2 > 1950 &&
+		CAL_SBUS_CH.CAL_CH3 < 2050 && CAL_SBUS_CH.CAL_CH3 > 1950 &&
+		CAL_SBUS_CH.CAL_CH4 < 1050 && CAL_SBUS_CH.CAL_CH4 > 950)
+	{
+		
+		magCount++;
+		if(magCount > 200)
+		{
+			  
+			  displayPage = 20;
+				magCount = 0;
+			  MagCalFlag = 1;
+		}
+	}
+	else
+	{
+		magCount = 0;
+	}
+	
+	}
+
 }
 

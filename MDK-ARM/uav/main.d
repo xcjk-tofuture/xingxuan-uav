@@ -55,7 +55,9 @@ uav/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Core\Inc\gpio.h ..\Peripheral_Proc\inc\sbus_proc.h \
   ..\Core\Inc\parameter.h F:\KEIL\ARM\ARMCLANG\Bin\..\include\stdio.h \
   ..\Peripheral_Proc\inc\led_proc.h ..\Peripheral_Proc\inc\oled_proc.h \
-  ..\Peripheral_Proc\inc\oledfont.h ..\Peripheral_Proc\inc\AHRS.h \
+  ..\Peripheral_Proc\inc\oledfont.h ..\Peripheral_Proc\inc\flow_proc.h \
+  ..\Peripheral_Proc\inc\motor_proc.h ..\MATH_Tools\inc\PID.h \
+  ..\Peripheral_Proc\inc\AHRS.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\SPL06.h \
   F:\KEIL\ARM\ARMCLANG\Bin\..\include\math.h \
   ..\Peripheral_Proc\inc\Attitude_Sensor\AK8975.h \

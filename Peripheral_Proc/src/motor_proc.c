@@ -113,35 +113,35 @@ void Motor_Task_Proc(void const * argument)
 
 void 	UAV_Control_Init(_uav_control_data* uav_data)
 {
-	uav_data->rollData.Kp = 10; 
+	uav_data->rollData.Kp = 0.1; 
 	uav_data->rollData.Ki = 0; 
 	uav_data->rollData.Kd = 0;
 	uav_data->rollData.ErrorMax = 70;
 	uav_data->rollData.DifferentialMax = 200;
 	uav_data->rollData.IntegrateMax = 1000;
 	
-	uav_data->pitchData.Kp = 10; 
+	uav_data->pitchData.Kp = 0.1; 
 	uav_data->pitchData.Ki = 0; 
 	uav_data->pitchData.Kd = 0;
 	uav_data->pitchData.ErrorMax = 70;
 	uav_data->pitchData.DifferentialMax = 200;
 	uav_data->pitchData.IntegrateMax = 1000;
 	
-  uav_data->yawData.Kp = 10; 
+  uav_data->yawData.Kp = 0.1; 
 	uav_data->yawData.Ki = 0; 
 	uav_data->yawData.Kd = 0; 
 	uav_data->yawData.ErrorMax = 70;
 	uav_data->yawData.DifferentialMax = 200;
 	uav_data->yawData.IntegrateMax = 1000;
 
-  uav_data->rollSpeedData.Kp = 10;
+  uav_data->rollSpeedData.Kp = 0.1;
 	uav_data->rollSpeedData.Ki = 0;
 	uav_data->rollSpeedData.Kd = 0;
 	uav_data->rollSpeedData.ErrorMax = 100;
 	uav_data->rollSpeedData.DifferentialMax = 200;
 	uav_data->rollSpeedData.IntegrateMax = 1000;
 	
-	uav_data->pitchSpeedData.Kp = 10;
+	uav_data->pitchSpeedData.Kp = 0.1;
 	uav_data->pitchSpeedData.Ki = 0;
 	uav_data->pitchSpeedData.Kd = 100;
 	uav_data->pitchSpeedData.ErrorMax = 100;

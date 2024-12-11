@@ -14,6 +14,7 @@
 
 #define SENSORS_ENABLE_SPL06 1;
 #define UPDATE_TIME 5
+#define UPDATE_TIME_MAG 20
 
 
 #define CALIBRATION_COUNT 500 //决定用多少个值去做校准
@@ -66,7 +67,7 @@ void Sensor_Data_Task_Proc(void const * argument)
 	#endif
 	#endif
 
-	
+	UAV_Read_Param_IMU(&imudata_all);
 	static TickType_t xLastWakeTime;
 	xLastWakeTime = xTaskGetTickCount();
 
@@ -77,9 +78,8 @@ void Sensor_Data_Task_Proc(void const * argument)
 	sensorTimeCount ++;
 	#if !EXTERN_IMU
 	
-	if(sensorTimeCount % 3 == 0)
+	if(sensorTimeCount % 5 == 0)
 	{	
-		IMU_Temperature_Control(40);
 		ReadAccTemperature(&imudata_all.f_temperature);
 		ReadAccData(&test_acc);
 		ReadGyroData(&test_gyro);
@@ -88,11 +88,11 @@ void Sensor_Data_Task_Proc(void const * argument)
 	#endif	
 	if(sensorTimeCount % UPDATE_TIME == 0)
 	{
-		
+		IMU_Temperature_Control(40);
 		imudata_all.Pressure = Drv_SPl0601_Read();
 		//Spl0601Get(&imudata_all.Hight);
 	#if !EXTERN_IMU
-		ReadMagData(&test_mag);
+		
 		IMU_Update(test_acc, test_gyro, test_mag, &imudata_all);
 	 if(!(AccCalFlag || GyroCalFlag || MagCalFlag))	
 	 {
@@ -111,6 +111,13 @@ void Sensor_Data_Task_Proc(void const * argument)
 			Cold_Start_ARHS(imudata_all, &attitude_t);
 	 }
 	#endif
+	}
+	
+	if(sensorTimeCount % UPDATE_TIME_MAG == 0)
+	{
+	#if !EXTERN_IMU	
+			ReadMagData(&test_mag);
+	#endif	
 	}
 	}
 
@@ -209,30 +216,34 @@ void Mag_Zero_Offset_Calibration(_imuData_all* imu)
 		{
 			case 0:
 				gyroRoll += imu->gyro.roll * (UPDATE_TIME / 1000.f);
-				magXMax = magXMax > imu->mag.x ? magXMax : imu->mag.x;
-				magXMin = magXMin < imu->mag.x ? magXMin : imu->mag.x;
-			  if(gyroRoll >= PI * 2.0f ||  gyroRoll <= PI * -2.0f)
+				magZMax = magZMax > imu->mag.z ? magZMax : imu->mag.z;
+				magZMin = magZMin < imu->mag.z ? magZMin : imu->mag.z;
+
+			  if(gyroRoll >= PI * 2.2f ||  gyroRoll <= PI * -2.2f)
 					magCalistep = 1;
 				break;
 			case 1:
-				imu->magoffsetbias.x = (magXMax + magXMin)  / 2;
+				imu->magoffsetbias.z = (magZMax + magZMin)  / 2;
 				gyroPitch += imu->gyro.pitch * (UPDATE_TIME / 1000.f);
-				magYMax = magYMax > imu->mag.y ? magYMax : imu->mag.y;
-				magYMin = magYMin < imu->mag.y ? magYMin : imu->mag.y;
-			  if(gyroPitch >= PI * 2.0f || gyroPitch <= PI * -2.0f)
+				magZMax = magZMax > imu->mag.z ? magZMax : imu->mag.z;
+				magZMin = magZMin < imu->mag.z ? magZMin : imu->mag.z;
+
+			  if(gyroPitch >= PI * 2.2f || gyroPitch <= PI * -2.2f)
 					magCalistep = 2;
 				break;
 			case 2:
-				imu->magoffsetbias.y = (magYMax + magYMin)  / 2;
+				imu->magoffsetbias.z = (magZMax + magZMin)  / 2;
 				gyroYaw += imu->gyro.yaw * (UPDATE_TIME / 1000.f);
-				magZMax = magZMax > imu->mag.z ? magZMax : imu->mag.z;
-				magZMin = magZMin < imu->mag.z ? magZMin : imu->mag.z;
-			  if((gyroYaw) >= PI * 2.0f || (gyroYaw) <= PI * -2.0f)
+				magXMax = magXMax > imu->mag.x ? magXMax : imu->mag.x;
+				magXMin = magXMin < imu->mag.x ? magXMin : imu->mag.x;
+				magYMax = magYMax > imu->mag.y ? magYMax : imu->mag.y;
+				magYMin = magYMin < imu->mag.y ? magYMin : imu->mag.y;
+			  if((gyroYaw) >= PI * 2.2f || (gyroYaw) <= PI * -2.2f)
 					magCalistep = 3;
 				break;
 			case 3:
-				imu->magoffsetbias.z = (magZMax + magZMin)  / 2;
-				
+				imu->magoffsetbias.x = (magXMax + magXMin)  / 2;
+				imu->magoffsetbias.y = (magYMax + magYMin)  / 2;
 			  gyroRoll = 0;
 				gyroPitch = 0;
 				gyroYaw = 0;
@@ -417,8 +428,10 @@ float invSqrt(float x)
 
 #define Kp 6.f                         // proportional gain governs rate of convergence to accelerometer/magnetometer
                                          //比例增益控制加速度计，磁力计的收敛速率
-#define Ki 0.008f                        // integral gain governs rate of convergence of gyroscope biases  
+#define Ki 0.05f                        // integral gain governs rate of convergence of gyroscope biases  
                                          //积分增益控制陀螺偏差的收敛速度
+#define Kp_Mag 6.f
+
 #define halfT UPDATE_TIME / 2000.f                     // half the sample period 采样周期的一半
 
 float q0 = 1, q1 = 0, q2 = 0, q3 = 0;     // quaternion elements representing the estimated orientation
@@ -463,10 +476,10 @@ void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _i
 	
 
 	
-	LowPassFilter2ndFactorCal(UPDATE_TIME, 30, &LPF2_GYRO);
+	LowPassFilter2ndFactorCal(UPDATE_TIME, 51, &LPF2_GYRO);
 	LPF2_GYRO_Data = LowPassFilter2nd(&LPF2_GYRO, LPF2_GYRO_Data);     //陀螺仪二阶低通滤波 截止频率50HZ
 	
-	LowPassFilter2ndFactorCal(UPDATE_TIME, 50, &LPF2_ACC);
+	LowPassFilter2ndFactorCal(UPDATE_TIME, 51, &LPF2_ACC);
 	LPF2_ACC_Data = LowPassFilter2nd(&LPF2_ACC, LPF2_ACC_Data);     //陀螺仪二阶低通滤波 截止频率50HZ
 	
 	imu->gyro.pitch = LPF2_GYRO_Data.y;
@@ -477,9 +490,9 @@ void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _i
 	imu->acc.y = LPF2_ACC_Data.y;
 	imu->acc.z = LPF2_ACC_Data.z;   //减去零偏误差
 
-	imu->mag.x = mag.x;
-	imu->mag.y = mag.y;
-	imu->mag.z = mag.z;
+	imu->mag.x = mag.x - imu->magoffsetbias.x;
+	imu->mag.y = mag.y - imu->magoffsetbias.y;
+	imu->mag.z = mag.z - imu->magoffsetbias.z;
 }
 
 void AHRS_Mahony_Update(_imuData_all imu, _ahrs_data *attitude)
@@ -533,7 +546,9 @@ void AHRS_Mahony_Update(_imuData_all imu, _ahrs_data *attitude)
 	hy = (2.f * (q1q2 + q0q3)) * mx + (q0q0 - q1q1 + q2q2 - q3q3) * my + (2.f * (q2q3 - q0q1)) * mz;
 
 	
-//	float emx,emy,emz;
+	float emx,emy,emz;
+	
+	
 //	float em_bx,em_by,em_bz;
 //	em_bx = 0;
 //	em_by = 0;
@@ -554,19 +569,22 @@ void AHRS_Mahony_Update(_imuData_all imu, _ahrs_data *attitude)
 	wy = (2.f * (q1q2 - q0q3)) * bx + (2.f * (q2q3 + q0q1)) * bz;
 	wz = (2.f * (q1q3 + q0q2)) * bx + (q0q0 - q1q1 - q2q2 + q3q3) * bz;
 	
+	emx = (my * wz - mz * wy);
+	emy = (mz * wx - mx * wz);
+	emz = (mx * wy - my * wx);
 	
-	ex = (ay * vz - az * vy); //(my * wz - mz * wy);
-	ey = (az * vx - ax * vz); //(mz * wx - mx * wz);
-	ez = (ax * vy - ay * vx); //(mx * wy - my * wx);  //叉乘求误差
+	ex = (ay * vz - az * vy);// + //(my * wz - mz * wy) * 0.1;
+	ey = (az * vx - ax * vz);// + //(mz * wx - mx * wz) * 0.1;
+	ez = (ax * vy - ay * vx);// + //(mx * wy - my * wx) * 0.1;  //叉乘求误差
 	
 	
-	exInt = exInt + ex * Ki;
-	eyInt = eyInt + ey * Ki;
-	ezInt = ezInt + ez * Ki;   //对误差进行积分
+	exInt = exInt + ex * Ki ;
+	eyInt = eyInt + ey * Ki ;
+	ezInt = ezInt + ez * Ki ;   //对误差进行积分
 
-	gx = gx + Kp * ex + exInt;
-	gy = gy + Kp * ey + eyInt;
-	gz = gz + Kp * ez + ezInt;  //对误差进行补偿
+	gx = gx + Kp * ex + exInt + emx * Kp_Mag;
+	gy = gy + Kp * ey + eyInt + emy * Kp_Mag;
+	gz = gz + Kp * ez + ezInt + emz * Kp_Mag;  //对误差进行补偿
 
 	q0 = q0 + (-q1 * gx - q2 * gy - q3 * gz) * halfT;  //四元数更新
 	q1 = q1 + (q0 * gx + q2 * gz - q3 * gy) * halfT;
@@ -750,9 +768,9 @@ void Cold_Start_ARHS(_imuData_all imu, _ahrs_data *attitude)
 	
 	
 	
-	attitude->yaw = 0;
-	attitude->pitch = pitch * SEC2DEG;   //T13
-	attitude->roll = roll * SEC2DEG;  // T23/T33
+//	attitude->yaw = -yaw * SEC2DEG;
+//	attitude->pitch = pitch * SEC2DEG;   //T13
+//	attitude->roll = roll * SEC2DEG;  // T23/T33
 	
 	// 将角度转换为弧度
 	double half_roll = roll * 0.5;
@@ -769,10 +787,14 @@ void Cold_Start_ARHS(_imuData_all imu, _ahrs_data *attitude)
 	double cos_y = cos(half_yaw);
 
 	// 计算四元数
-	attitude->q0 = cos_r * cos_p * cos_y - sin_r * sin_p * sin_y;
-	attitude->q1 = sin_r * cos_p * cos_y + cos_r * sin_p * sin_y;
-	attitude->q2 = cos_r * sin_p * cos_y - sin_r * cos_p * sin_y;
-	attitude->q3 = cos_r * cos_p * sin_y + sin_r * sin_p * cos_y;
+//	attitude->q0 = cos_r * cos_p * cos_y - sin_r * sin_p * sin_y;
+//	attitude->q1 = sin_r * cos_p * cos_y + cos_r * sin_p * sin_y;
+//	attitude->q2 = cos_r * sin_p * cos_y - sin_r * cos_p * sin_y;
+//	attitude->q3 = cos_r * cos_p * sin_y + sin_r * sin_p * cos_y;
+	attitude->q0 = 1;
+	attitude->q1 = 0;
+	attitude->q2 = 0;
+	attitude->q3 = 0;
 
 //	// 计算四元数
 //	attitude->q0 = cos_r * cos_p * cos_y + sin_r * sin_p * sin_y;

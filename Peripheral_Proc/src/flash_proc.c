@@ -84,20 +84,20 @@ void UAV_Read_Param_IMU(_imuData_all* imu_data)
 	W25QXX_Read(temp_imu_read, FLASH_IMU_ADDR, sizeof(temp_imu_read));
 	memcpy(temp_imu_read_value, temp_imu_read, sizeof(temp_imu_read));
 	
-	imu_data->accoffsetbias.x = temp_imu_read_value[0];
-	imu_data->accoffsetbias.y = temp_imu_read_value[1];
-	imu_data->accoffsetbias.z = temp_imu_read_value[2];
-	imu_data->accscalebias.x = temp_imu_read_value[3];
-	imu_data->accscalebias.y = temp_imu_read_value[4];
-	imu_data->accscalebias.z = temp_imu_read_value[5];
-	
-	
-  imu_data->gyrooffsetbias.x = temp_imu_read_value[6];
-	imu_data->gyrooffsetbias.y = temp_imu_read_value[7];
-	imu_data->gyrooffsetbias.z = temp_imu_read_value[8];
-	imu_data->gyroscalebias.x = temp_imu_read_value[9];
-	imu_data->gyroscalebias.y = temp_imu_read_value[10];
-	imu_data->gyroscalebias.z = temp_imu_read_value[11];
+//	imu_data->accoffsetbias.x = temp_imu_read_value[0];
+//	imu_data->accoffsetbias.y = temp_imu_read_value[1];
+//	imu_data->accoffsetbias.z = temp_imu_read_value[2];
+//	imu_data->accscalebias.x = temp_imu_read_value[3];
+//	imu_data->accscalebias.y = temp_imu_read_value[4];
+//	imu_data->accscalebias.z = temp_imu_read_value[5];
+//	
+//	
+//  imu_data->gyrooffsetbias.x = temp_imu_read_value[6];
+//	imu_data->gyrooffsetbias.y = temp_imu_read_value[7];
+//	imu_data->gyrooffsetbias.z = temp_imu_read_value[8];
+//	imu_data->gyroscalebias.x = temp_imu_read_value[9];
+//	imu_data->gyroscalebias.y = temp_imu_read_value[10];
+//	imu_data->gyroscalebias.z = temp_imu_read_value[11];
 	
 	imu_data->magoffsetbias.x = temp_imu_read_value[12];
 	imu_data->magoffsetbias.y = temp_imu_read_value[13];

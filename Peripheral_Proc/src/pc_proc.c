@@ -21,9 +21,9 @@ void PC_Task_Proc(void const * argument)
   for(;;)
   {
 		//printf("%0.1f  %0.1f  %0.1f \r\n", imudata_all.mag.x * 0.3 * 10 , imudata_all.mag.y * 0.3 * 10, imudata_all.mag.z * 0.3 * 10 );
-//	  ANODT_SendState(attitude_t.roll * 100, attitude_t.pitch * 100, attitude_t.yaw * 100, 1);
-//		ANODT_SendRawAccGyro(imudata_all.acc.x * 100, imudata_all.acc.y * 100, imudata_all.acc.z * 100, imudata_all.gyro.roll * 100, imudata_all.gyro.pitch * 100, imudata_all.gyro.yaw * 100, !Bmi088Init_Flag);
-//		ANODT_SendRawMagTempAlt(imudata_all.mag.x, imudata_all.mag.y, imudata_all.mag.z, imudata_all.Pressure , imudata_all.f_temperature * 100, !SPL06Flag, !AK8975Flag);
+	  ANODT_SendState(attitude_t.roll * 100, attitude_t.pitch * 100, attitude_t.yaw * 100, 1);
+		ANODT_SendRawAccGyro(imudata_all.acc.x * 100, imudata_all.acc.y * 100, imudata_all.acc.z * 100, imudata_all.gyro.roll * 100, imudata_all.gyro.pitch * 100, imudata_all.gyro.yaw * 100, !Bmi088Init_Flag);
+		ANODT_SendRawMagTempAlt(imudata_all.mag.x, imudata_all.mag.y, imudata_all.mag.z, imudata_all.Pressure , imudata_all.f_temperature * 100, !SPL06Flag, !AK8975Flag);
 		// ANODT_SendQuaternion()
 //		memset(InfoBuffer,0,1000);	 
 //		vTaskList(InfoBuffer);

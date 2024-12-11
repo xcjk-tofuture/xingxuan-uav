@@ -133,6 +133,25 @@ void Show_Data(u8 page)
 		sprintf((char *)oledDisp,"conf:%02d%%       ", upixels_flow_T2_data.flowConf); 
 		OLED_ShowString(0, 6,(char *)oledDisp,12, 0);
 	}
+		else if(page == 4)
+	{
+		sprintf((char *)oledDisp,"PAGE  4   CALI DATA   "); 
+		OLED_ShowString(0, 0,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"         "); 
+		OLED_ShowString(0, 1,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"AxO:%+4.1f %+4.3f  ", imudata_all.accoffsetbias.x, imudata_all.gyrooffsetbias.x); 
+		OLED_ShowString(0, 2,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"AyO:%+4.1f %+4.3f  ", imudata_all.accoffsetbias.x ,imudata_all.gyrooffsetbias.x);  
+		OLED_ShowString(0, 3,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"AzO:%+4.1f %+4.3f  ", imudata_all.accoffsetbias.x ,imudata_all.gyrooffsetbias.x); 
+		OLED_ShowString(0, 4,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"MxO:%4.1f       ", imudata_all.magoffsetbias.x); 
+		OLED_ShowString(0, 5,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"MyO:%4.1f       ", imudata_all.magoffsetbias.y); 
+		OLED_ShowString(0, 6,(char *)oledDisp,12, 0);
+		sprintf((char *)oledDisp,"MzO:%4.1f       ", imudata_all.magoffsetbias.z); 
+		OLED_ShowString(0, 7,(char *)oledDisp,12, 0);
+	}
 
 	
 		else if(page == 19)

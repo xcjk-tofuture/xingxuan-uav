@@ -78,7 +78,7 @@ void Sensor_Data_Task_Proc(void const * argument)
 	sensorTimeCount ++;
 	#if !EXTERN_IMU
 	
-	if(sensorTimeCount % 5 == 0)
+	if(sensorTimeCount % 2 == 0)
 	{	
 		ReadAccTemperature(&imudata_all.f_temperature);
 		ReadAccData(&test_acc);
@@ -666,9 +666,9 @@ void AHRS_Kalman_Update(_imuData_all imu, _ahrs_data *attitude)
 								0.0f, 0.3, 0.0f, 
 								0.0f, 0.0f,0.3}; //观测噪声协方差矩阵
 	//step1 - system input
-  mZx = cos(pitch_k) * mbx + sin(pitch_k) * sin(roll_k) * mby + 
-								sin(pitch_k) * cos(roll_k) * mbz;   //先绕roll 再绕pitch
-	mZy = cos(roll_k) * mby - sin(roll_k) * mbz;
+  mZx = cos(pitch_z) * mbx + sin(pitch_z) * sin(roll_z) * mby + 
+								sin(pitch_z) * cos(roll_z) * mbz;   //先绕roll 再绕pitch
+	mZy = cos(roll_z) * mby - sin(roll_z) * mbz;
 //  mZz = -sin(pitch_k) * mbx + cos(pitch_k) * sin(roll_k) * mby + 
 //								cos(pitch_k) * cos(roll_k) * mbz;
 								
@@ -682,14 +682,9 @@ void AHRS_Kalman_Update(_imuData_all imu, _ahrs_data *attitude)
 	pitch_k_ = pitch_k_1 + allT * v_pitch;
 	yaw_k_ = yaw_k_1 + allT * v_yaw;
 
-//		if( yaw_k_ > 3.141f ) //if it is greater than PI
-//	{
-//		yaw_k_ -= - 3.141f * 2.f;
-//	}		
-//	else if(yaw_k_ < -3.141f ) //if it is less than -PI
-//	{
-//		yaw_k_ += 3.141f * 2.f;
-//	}
+	if (yaw_k_ > PI) yaw_k_ -= 2.0f * PI;
+	else if (yaw_k_ < -PI) yaw_k_ += 2.0f * PI;
+
 
 	//step2 - Prior estimation
 	p_k_[0] = p_k_1[0] + Q[0];
@@ -702,9 +697,11 @@ void AHRS_Kalman_Update(_imuData_all imu, _ahrs_data *attitude)
 	Kk[4] = p_k_[4] / (p_k_[4] + R[4]);
 	Kk[8] = p_k_[8] / (p_k_[8] + R[8]);
 	
-	roll_z = atan((ay) / (az));
-  pitch_z = -1 * atan((ax) / sqrt(ay * ay  + az * az));
-	yaw_z = atan(mZy / mZx);
+//	roll_z = atan((ay) / (az));
+//  pitch_z = -1 * atan((ax) / sqrt(ay * ay  + az * az));
+	roll_z = atan2(ay, az);
+	pitch_z = atan2(-ax, sqrt(ay * ay + az * az));
+  yaw_z = atan2(mZy, mZx);
 	
 	roll_k = roll_k_ + Kk[0] * (roll_z - roll_k_);
 	pitch_k = pitch_k_ + Kk[4] * (pitch_z - pitch_k_);

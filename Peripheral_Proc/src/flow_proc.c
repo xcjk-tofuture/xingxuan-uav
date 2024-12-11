@@ -27,8 +27,8 @@ void Flow_Data_Proc(u8 size)
 	if(size == 14 && uart2RX[0] == 0XFE && uart2RX[1] == 0X0A)
 	{
 		upixels_flow_T2_data.zNowHeight = (uart2RX[8] | uart2RX[9] << 8);
-		upixels_flow_T2_data.xNowOffset = (uart2RX[2] | uart2RX[3] << 8) * upixels_flow_T2_data.zNowHeight /10000;
-		upixels_flow_T2_data.yNowOffset = (uart2RX[4] | uart2RX[5] << 8) * upixels_flow_T2_data.zNowHeight /10000;
+		upixels_flow_T2_data.xNowOffset = (uart2RX[2] | uart2RX[3] << 8) * upixels_flow_T2_data.zNowHeight /10000.f;
+		upixels_flow_T2_data.yNowOffset = (uart2RX[4] | uart2RX[5] << 8) * upixels_flow_T2_data.zNowHeight /10000.f;
 		upixels_flow_T2_data.delatTime  = (uart2RX[6] | uart2RX[7] << 8);
 		upixels_flow_T2_data.flowFlag = uart2RX[10];
 		upixels_flow_T2_data.flowConf = uart2RX[11];

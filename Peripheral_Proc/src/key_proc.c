@@ -50,7 +50,7 @@ void Key_Task_Proc(void const * argument)
 			
 			if(keyDown == 1)
 			{
-				if(++displayPage > 3)
+				if(++displayPage > 4)
 				{
 					
 					displayPage = 1;

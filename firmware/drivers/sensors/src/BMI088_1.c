@@ -12,7 +12,6 @@
 #include "bmi088reg.h"
 #include "sensor_port.h"
 
-
 bmi088_error_e BMI088_INIT(void) {
     bmi088_error_e error = NO_ERROR;
 
@@ -20,119 +19,119 @@ bmi088_error_e BMI088_INIT(void) {
 
     error |= VerifyAccChipID();
     error |= VerifyGyroChipID();
-    if (1) {  // Ω´¿¥∏ƒ≥…±‰¡øøÿ÷∆◊‘ºÏ
+    if (1) { // Â∞ÜÊù•ÊîπÊàêÂèòÈáèÊéßÂà∂Ëá™Ê£Ä
         error |= VerifyAccSelfTest();
     }
-    if (1) {  // Ω´¿¥∏ƒ≥…±‰¡øøÿ÷∆◊‘ºÏ
+    if (1) { // Â∞ÜÊù•ÊîπÊàêÂèòÈáèÊéßÂà∂Ëá™Ê£Ä
         error |= VerifyGyroSelfTest();
     }
     return error;
 }
 
 void WriteDataToAcc(uint8_t addr, uint8_t data) {
-    uav_sensor_select(0,1);
+    uav_sensor_select(0, 1);
     uint8_t pTxData = (addr & BMI088_SPI_WRITE_CODE);
-    uav_sensor_tx(&pTxData,1);
-    
+    uav_sensor_tx(&pTxData, 1);
+
     pTxData = data;
-    uav_sensor_tx(&pTxData,1);
-    
+    uav_sensor_tx(&pTxData, 1);
+
     uav_sensor_delay_ms(1);
-    uav_sensor_select(0,0);
+    uav_sensor_select(0, 0);
 }
 
 void WriteDataToGyro(uint8_t addr, uint8_t data) {
-    uav_sensor_select(1,1);
+    uav_sensor_select(1, 1);
     uint8_t pTxData = (addr & BMI088_SPI_WRITE_CODE);
-    uav_sensor_tx(&pTxData,1);
-    
+    uav_sensor_tx(&pTxData, 1);
+
     pTxData = data;
-    uav_sensor_tx(&pTxData,1);
-    
+    uav_sensor_tx(&pTxData, 1);
+
     uav_sensor_delay_ms(1);
-    uav_sensor_select(1,0);
+    uav_sensor_select(1, 0);
 }
 
 void ReadSingleDataFromAcc(uint8_t addr, uint8_t *data) {
-    uav_sensor_select(0,1);
+    uav_sensor_select(0, 1);
     uint8_t pTxData = (addr | BMI088_SPI_READ_CODE);
-    uav_sensor_tx(&pTxData,1);
-    
-    uav_sensor_rx(data,1);
-    
-    uav_sensor_rx(data,1);
-    
-    uav_sensor_select(0,0);
+    uav_sensor_tx(&pTxData, 1);
+
+    uav_sensor_rx(data, 1);
+
+    uav_sensor_rx(data, 1);
+
+    uav_sensor_select(0, 0);
 }
 
 void ReadSingleDataFromGyro(uint8_t addr, uint8_t *data) {
-    uav_sensor_select(1,1);
+    uav_sensor_select(1, 1);
     uint8_t pTxData = (addr | BMI088_SPI_READ_CODE);
-    uav_sensor_tx(&pTxData,1);
-    
-    uav_sensor_rx(data,1);
-    
-    uav_sensor_select(1,0);
+    uav_sensor_tx(&pTxData, 1);
+
+    uav_sensor_rx(data, 1);
+
+    uav_sensor_select(1, 0);
 }
 
 void ReadMultiDataFromAcc(uint8_t addr, uint8_t len, uint8_t *data) {
-    uav_sensor_select(0,1);
+    uav_sensor_select(0, 1);
     uint8_t pTxData = (addr | BMI088_SPI_READ_CODE);
     uint8_t pRxData;
-    uav_sensor_tx(&pTxData,1);
-    
-    uav_sensor_rx(&pRxData,1);
-    
+    uav_sensor_tx(&pTxData, 1);
+
+    uav_sensor_rx(&pRxData, 1);
+
     for (int i = 0; i < len; i++) {
-        uav_sensor_rx(&pRxData,1);
-        
+        uav_sensor_rx(&pRxData, 1);
+
         data[i] = pRxData;
     }
-    uav_sensor_select(0,0);
+    uav_sensor_select(0, 0);
 }
 
 void ReadMultiDataFromGyro(uint8_t addr, uint8_t len, uint8_t *data) {
-    uav_sensor_select(1,1);
+    uav_sensor_select(1, 1);
     uint8_t pTxData = (addr | BMI088_SPI_READ_CODE);
     uint8_t pRxData;
-    uav_sensor_tx(&pTxData,1);
-    
+    uav_sensor_tx(&pTxData, 1);
+
     for (int i = 0; i < len; i++) {
-        uav_sensor_rx(&pRxData,1);
-        
+        uav_sensor_rx(&pRxData, 1);
+
         data[i] = pRxData;
     }
-    uav_sensor_select(1,0);
+    uav_sensor_select(1, 0);
 }
 
 void BMI088_CONF_INIT(void) {
-    // º”ÀŸ∂»º∆≥ı ºªØ
-    // œ»»Ì÷ÿ∆Ù£¨«Âø’À˘”–ºƒ¥Ê∆˜
+    // Âä†ÈÄüÂ∫¶ËÆ°ÂàùÂßãÂåñ
+    // ÂÖàËΩØÈáçÂêØÔºåÊ∏ÖÁ©∫ÊâÄÊúâÂØÑÂ≠òÂô®
     WriteDataToAcc(ACC_SOFTRESET_ADDR, ACC_SOFTRESET_VAL);
     uav_sensor_delay_ms(50);
-    // ¥Úø™º”ÀŸ∂»º∆µÁ‘¥
+    // ÊâìÂºÄÂä†ÈÄüÂ∫¶ËÆ°ÁîµÊ∫ê
     WriteDataToAcc(ACC_PWR_CTRL_ADDR, ACC_PWR_CTRL_ON);
-    // º”ÀŸ∂»º∆±‰≥…’˝≥£ƒ£ Ω
+    // Âä†ÈÄüÂ∫¶ËÆ°ÂèòÊàêÊ≠£Â∏∏Ê®°Âºè
     WriteDataToAcc(ACC_PWR_CONF_ADDR, ACC_PWR_CONF_ACT);
 
-    // Õ”¬›“«≥ı ºªØ
-    // œ»»Ì÷ÿ∆Ù£¨«Âø’À˘”–ºƒ¥Ê∆˜
+    // ÈôÄËû∫‰ª™ÂàùÂßãÂåñ
+    // ÂÖàËΩØÈáçÂêØÔºåÊ∏ÖÁ©∫ÊâÄÊúâÂØÑÂ≠òÂô®
     WriteDataToGyro(GYRO_SOFTRESET_ADDR, GYRO_SOFTRESET_VAL);
     uav_sensor_delay_ms(50);
-    // Õ”¬›“«±‰≥…’˝≥£ƒ£ Ω
+    // ÈôÄËû∫‰ª™ÂèòÊàêÊ≠£Â∏∏Ê®°Âºè
     WriteDataToGyro(GYRO_LPM1_ADDR, GYRO_LPM1_NOR);
 
-    // º”ÀŸ∂»º∆≈‰÷√–¥»Î
-    // –¥»Î∑∂Œß£¨+-3gµƒ≤‚¡ø∑∂Œß
+    // Âä†ÈÄüÂ∫¶ËÆ°ÈÖçÁΩÆÂÜôÂÖ•
+    // ÂÜôÂÖ•ËåÉÂõ¥Ôºå+-3gÁöÑÊµãÈáèËåÉÂõ¥
     WriteDataToAcc(ACC_RANGE_ADDR, ACC_RANGE_3G);
-    // –¥»Î≈‰÷√£¨’˝≥£¥¯øÌ£¨1600hz ‰≥ˆ∆µ¬ 
+    // ÂÜôÂÖ•ÈÖçÁΩÆÔºåÊ≠£Â∏∏Â∏¶ÂÆΩÔºå1600hzËæìÂá∫È¢ëÁéá
     WriteDataToAcc(ACC_CONF_ADDR,
                    (ACC_CONF_RESERVED << 7) | (ACC_CONF_BWP_NORM << 6) | (ACC_CONF_ODR_1600_Hz));
 
-    // Õ”¬›“«≈‰÷√–¥»Î
-    // –¥»Î∑∂Œß£¨+-500°„/sµƒ≤‚¡ø∑∂Œß
+    // ÈôÄËû∫‰ª™ÈÖçÁΩÆÂÜôÂÖ•
+    // ÂÜôÂÖ•ËåÉÂõ¥Ôºå+-500¬∞/sÁöÑÊµãÈáèËåÉÂõ¥
     WriteDataToGyro(GYRO_RANGE_ADDR, GYRO_RANGE_500_DEG_S);
-    // –¥»Î¥¯øÌ£¨2000Hz ‰≥ˆ∆µ¬ £¨532Hz¬À≤®∆˜¥¯øÌ
+    // ÂÜôÂÖ•Â∏¶ÂÆΩÔºå2000HzËæìÂá∫È¢ëÁéáÔºå532HzÊª§Ê≥¢Âô®Â∏¶ÂÆΩ
     WriteDataToGyro(GYRO_BANDWIDTH_ADDR, GYRO_ODR_2000Hz_BANDWIDTH_532Hz);
 }
 
@@ -167,7 +166,8 @@ bmi088_error_e VerifyAccSelfTest(void) {
     ReadAccData(&neg_data);
     WriteDataToAcc(ACC_SELF_TEST_ADDR, ACC_SELF_TEST_OFF);
     uav_sensor_delay_ms(100);
-    if ((fabs(pos_data.x - neg_data.x) > 0.1f) || (fabs(pos_data.y - neg_data.y) > 0.1f) || (fabs(pos_data.z - neg_data.z) > 0.1f)) {
+    if ((fabs(pos_data.x - neg_data.x) > 0.1f) || (fabs(pos_data.y - neg_data.y) > 0.1f) ||
+        (fabs(pos_data.z - neg_data.z) > 0.1f)) {
         return ACC_DATA_ERR;
     }
     WriteDataToAcc(ACC_SOFTRESET_ADDR, ACC_SOFTRESET_VAL);
@@ -214,27 +214,26 @@ void ReadGyroData(gyro_raw_data_t *data) {
     float unit;
     ReadSingleDataFromGyro(GYRO_RANGE_ADDR, &range);
     switch (range) {
-        case 0x00:
-            unit = 16.384;
-            break;
-        case 0x01:
-            unit = 32.768;
-            break;
-        case 0x02:
-            unit = 65.536;
-            break;
-        case 0x03:
-            unit = 131.072;
-            break;
-        case 0x04:
-            unit = 262.144;
-            break;
-        default:
-            unit = 16.384;
-            break;
-				
+    case 0x00:
+        unit = 16.384;
+        break;
+    case 0x01:
+        unit = 32.768;
+        break;
+    case 0x02:
+        unit = 65.536;
+        break;
+    case 0x03:
+        unit = 131.072;
+        break;
+    case 0x04:
+        unit = 262.144;
+        break;
+    default:
+        unit = 16.384;
+        break;
     }
-		
+
     ReadMultiDataFromGyro(GYRO_RATE_X_LSB_ADDR, GYRO_XYZ_LEN, buf);
     gyro[0] = ((int16_t)buf[1] << 8) + (int16_t)buf[0];
     gyro[1] = ((int16_t)buf[3] << 8) + (int16_t)buf[2];
@@ -262,4 +261,3 @@ void ReadAccTemperature(float *temp) {
     }
     *temp = temp_int11 * TEMP_UNIT + TEMP_BIAS;
 }
-

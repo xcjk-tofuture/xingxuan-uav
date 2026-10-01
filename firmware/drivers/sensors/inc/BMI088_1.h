@@ -13,7 +13,6 @@
 #include "bmi088reg.h"
 #include "uav_board.h"
 
-
 typedef struct acc_raw_data_t {
     float x;
     float y;
@@ -25,7 +24,6 @@ typedef struct gyro_raw_data_t {
     float pitch;
     float yaw;
 } gyro_raw_data_t;
-
 
 typedef struct acc_data_t {
     acc_raw_data_t acc_raw_data;
@@ -52,7 +50,7 @@ typedef struct bmi088_data_t {
     bmi088_error_e bmi088_error;
 } bmi088_data_t;
 
-// »ù´¡º¯Êı
+// åŸºç¡€å‡½æ•°
 void WriteDataToAcc(uint8_t addr, uint8_t data);
 void WriteDataToGyro(uint8_t addr, uint8_t data);
 void ReadSingleDataFromAcc(uint8_t addr, uint8_t *data);
@@ -60,17 +58,17 @@ void ReadSingleDataFromGyro(uint8_t addr, uint8_t *data);
 void ReadMultiDataFromAcc(uint8_t addr, uint8_t len, uint8_t *data);
 void ReadMultiDataFromGyro(uint8_t addr, uint8_t len, uint8_t *data);
 
-// ³õÊ¼»¯º¯Êı
+// åˆå§‹åŒ–å‡½æ•°
 bmi088_error_e BMI088_INIT(void);
 void BMI088_CONF_INIT(void);
 
-// ¹¦ÄÜº¯Êı
+// åŠŸèƒ½å‡½æ•°
 void ReadAccData(acc_raw_data_t *data);
 void ReadGyroData(gyro_raw_data_t *data);
 void ReadAccSensorTime(float *time);
 void ReadAccTemperature(float *temp);
 
-// Ğ£Ñéº¯Êı
+// æ ¡éªŒå‡½æ•°
 bmi088_error_e VerifyAccChipID(void);
 bmi088_error_e VerifyGyroChipID(void);
 bmi088_error_e VerifyAccSelfTest(void);

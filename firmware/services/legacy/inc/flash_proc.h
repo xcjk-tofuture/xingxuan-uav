@@ -12,22 +12,20 @@
 #include "stdio.h"
 #include "string.h"
 
-
 #include "AHRS.h"
 #include "motor_proc.h"
 #include "sbus_proc.h"
 
 int uav_storage_init(void);
 void Flash_Task_Proc(void const *argument);
-void W25q32_Task_Proc(void const * argument);
+void W25q32_Task_Proc(void const *argument);
 
-void UAV_Read_Param_IMU(_imuData_all* imu_data);
-void UAV_Read_Param_Remote(_sbus_ch_struct* channe_data);
-void UAV_Read_Param_Motor(_uav_control_data* motor_data);
+void UAV_Read_Param_IMU(_imuData_all *imu_data);
+void UAV_Read_Param_Remote(_sbus_ch_struct *channe_data);
+void UAV_Read_Param_Motor(_uav_control_data *motor_data);
 void UAV_Write_Param_Motor(_uav_control_data motor_data);
 void UAV_Write_Param_Remote(_sbus_ch_struct channe_data);
 void UAV_Write_Param_IMU(_imuData_all imu_data);
-
 
 #include "w25qxx_device.h"
 #endif

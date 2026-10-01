@@ -6,14 +6,8 @@
 #include "main.h"
 #include "cmsis_os.h"
 
-
-
-
-
 #endif
 
-
-void Key_Task_Proc(void const * argument);
-
+void Key_Task_Proc(void const *argument);
 
 u8 Key_Scan();

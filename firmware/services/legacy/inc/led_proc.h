@@ -2,20 +2,13 @@
 
 #define __LED_PROC_H__
 
-
-
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
 
-
-
-
-
-
-void RGB_Task_Proc(void const * argument);		//RGB½ø³ÌÖ÷³ÌĞò
-void RGB_Show_Proc(u8 ucled);                 //RGB´¦Àíº¯Êı
+void RGB_Task_Proc(void const *argument); // RGBè¿›ç¨‹ä¸»ç¨‹åº
+void RGB_Show_Proc(u8 ucled);             // RGBå¤„ç†å‡½æ•°
 void RGB_Normal(u8 ucled);
 
 void RGB_Calibration(u8 ucled);

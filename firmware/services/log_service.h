@@ -6,5 +6,5 @@
  * One low-priority consumer owns UART3; startup logs before init are discarded. */
 int uav_log_init(void);
 void uav_log_byte(uint8_t byte);
-size_t uav_log_receive(uint8_t *bytes,size_t capacity,uint32_t timeout_ms);
+size_t uav_log_receive(uint8_t *bytes, size_t capacity, uint32_t timeout_ms);
 #endif

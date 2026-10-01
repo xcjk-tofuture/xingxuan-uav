@@ -2,74 +2,70 @@
 #define __SBUS_PROC_H__
 #include <stdint.h>
 
-
-
 #include <stdio.h>
-typedef struct
-{
-		uint16_t CH1;//Í¨µÀ1ÊıÖµ
-		uint16_t CH2;//Í¨µÀ2ÊıÖµ
-		uint16_t CH3;//Í¨µÀ3ÊıÖµ
-		uint16_t CH4;//Í¨µÀ4ÊıÖµ
-		uint16_t CH5;//Í¨µÀ5ÊıÖµ
-		uint16_t CH6;//Í¨µÀ6ÊıÖµ
-    uint16_t CH7;//Í¨µÀ7ÊıÖµ
-    uint16_t CH8;//Í¨µÀ8ÊıÖµ
-    uint16_t CH9;//Í¨µÀ9ÊıÖµ
-    uint16_t CH10;//Í¨µÀ10ÊıÖµ
-    uint16_t CH11;//Í¨µÀ11ÊıÖµ
-    uint16_t CH12;//Í¨µÀ12ÊıÖµ
-    uint16_t CH13;//Í¨µÀ13ÊıÖµ
-    uint16_t CH14;//Í¨µÀ14ÊıÖµ
-    uint16_t CH15;//Í¨µÀ15ÊıÖµ
-    uint16_t CH16;//Í¨µÀ16ÊıÖµ
-		uint8_t Connect_State;//Ò£¿ØÆ÷Óë½ÓÊÕÆ÷Á¬½Ó×´Ì¬ 0=Î´Á¬½Ó£¬1=Õı³£Á¬½Ó
-	
-		uint16_t CH1_MAX;
-		uint16_t CH1_MIN;
-	
-		uint16_t CH2_MAX;
-		uint16_t CH2_MIN;
-		
-		uint16_t CH3_MAX;
-		uint16_t CH3_MIN;
-		
-		uint16_t CH4_MAX;
-		uint16_t CH4_MIN;
-		
-		uint16_t CH5_MAX;
-		uint16_t CH5_MIN;
-	
-		uint16_t CH6_MAX;
-		uint16_t CH6_MIN;
-		
-		uint16_t CH7_MAX;
-		uint16_t CH7_MIN;
-		
-		uint16_t CH8_MAX;
-		uint16_t CH8_MIN;
-}_sbus_ch_struct;
+typedef struct {
+    uint16_t CH1;          // é€šé“1æ•°å€¼
+    uint16_t CH2;          // é€šé“2æ•°å€¼
+    uint16_t CH3;          // é€šé“3æ•°å€¼
+    uint16_t CH4;          // é€šé“4æ•°å€¼
+    uint16_t CH5;          // é€šé“5æ•°å€¼
+    uint16_t CH6;          // é€šé“6æ•°å€¼
+    uint16_t CH7;          // é€šé“7æ•°å€¼
+    uint16_t CH8;          // é€šé“8æ•°å€¼
+    uint16_t CH9;          // é€šé“9æ•°å€¼
+    uint16_t CH10;         // é€šé“10æ•°å€¼
+    uint16_t CH11;         // é€šé“11æ•°å€¼
+    uint16_t CH12;         // é€šé“12æ•°å€¼
+    uint16_t CH13;         // é€šé“13æ•°å€¼
+    uint16_t CH14;         // é€šé“14æ•°å€¼
+    uint16_t CH15;         // é€šé“15æ•°å€¼
+    uint16_t CH16;         // é€šé“16æ•°å€¼
+    uint8_t Connect_State; // é¥æ§å™¨ä¸æ¥æ”¶å™¨è¿æ¥çŠ¶æ€ 0=æœªè¿æ¥ï¼Œ1=æ­£å¸¸è¿æ¥
 
+    uint16_t CH1_MAX;
+    uint16_t CH1_MIN;
 
-typedef struct
-{
-		uint16_t CAL_CH1;//Í¨µÀ1ÊıÖµ
-		uint16_t CAL_CH2;//Í¨µÀ2ÊıÖµ
-		uint16_t CAL_CH3;//Í¨µÀ3ÊıÖµ
-		uint16_t CAL_CH4;//Í¨µÀ4ÊıÖµ
-		uint16_t CAL_CH5;//Í¨µÀ5ÊıÖµ
-		uint16_t CAL_CH6;//Í¨µÀ6ÊıÖµ
-		uint16_t CAL_CH7;//Í¨µÀ7ÊıÖµ
-		uint16_t CAL_CH8;//Í¨µÀ8ÊıÖµ
-		uint8_t Connect_State;//Ò£¿ØÆ÷Óë½ÓÊÕÆ÷Á¬½Ó×´Ì¬ 0=Î´Á¬½Ó£¬1=Õı³£Á¬½Ó
-}_sbus_ch_cal_struct;
+    uint16_t CH2_MAX;
+    uint16_t CH2_MIN;
 
-void Sbus_Uart6_Task_Proc(void const * argument);
+    uint16_t CH3_MAX;
+    uint16_t CH3_MIN;
+
+    uint16_t CH4_MAX;
+    uint16_t CH4_MIN;
+
+    uint16_t CH5_MAX;
+    uint16_t CH5_MIN;
+
+    uint16_t CH6_MAX;
+    uint16_t CH6_MIN;
+
+    uint16_t CH7_MAX;
+    uint16_t CH7_MIN;
+
+    uint16_t CH8_MAX;
+    uint16_t CH8_MIN;
+} _sbus_ch_struct;
+
+typedef struct {
+    uint16_t CAL_CH1;      // é€šé“1æ•°å€¼
+    uint16_t CAL_CH2;      // é€šé“2æ•°å€¼
+    uint16_t CAL_CH3;      // é€šé“3æ•°å€¼
+    uint16_t CAL_CH4;      // é€šé“4æ•°å€¼
+    uint16_t CAL_CH5;      // é€šé“5æ•°å€¼
+    uint16_t CAL_CH6;      // é€šé“6æ•°å€¼
+    uint16_t CAL_CH7;      // é€šé“7æ•°å€¼
+    uint16_t CAL_CH8;      // é€šé“8æ•°å€¼
+    uint8_t Connect_State; // é¥æ§å™¨ä¸æ¥æ”¶å™¨è¿æ¥çŠ¶æ€ 0=æœªè¿æ¥ï¼Œ1=æ­£å¸¸è¿æ¥
+} _sbus_ch_cal_struct;
+
+void Sbus_Uart6_Task_Proc(void const *argument);
 void Sbus_Uart6_IDLE_Proc(uint16_t Size);
 
 void Sbus_Channels_Proc(void);
 uint16_t Sbus_To_Pwm(uint16_t sbus_value);
-float Sbus_To_Range(uint16_t sbus_value, float p_min, float p_max, uint16_t ch_min, uint16_t ch_max);
+float Sbus_To_Range(uint16_t sbus_value, float p_min, float p_max, uint16_t ch_min,
+                    uint16_t ch_max);
 
 void Channel_Param_Init();
 void Remote_Channel_Calibration();

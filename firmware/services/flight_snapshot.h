@@ -1,10 +1,16 @@
 #ifndef FLIGHT_SNAPSHOT_H
 #define FLIGHT_SNAPSHOT_H
 #include <stdint.h>
-typedef struct {float roll_rad,pitch_rad,yaw_rad;float roll_rate_radps,pitch_rate_radps,yaw_rate_radps;uint32_t attitude_ms;uint8_t valid,state;} flight_snapshot_t;
+typedef struct {
+    float roll_rad, pitch_rad, yaw_rad;
+    float roll_rate_radps, pitch_rate_radps, yaw_rate_radps;
+    uint32_t attitude_ms;
+    uint8_t valid, state;
+} flight_snapshot_t;
 /* Sensor task publishes attitude; control task publishes state. Other tasks
  * copy a coherent snapshot. Nonblocking, task context only. */
-void flight_attitude_publish(float roll_deg,float pitch_deg,float yaw_deg,float roll_dps,float pitch_dps,float yaw_dps);
+void flight_attitude_publish(float roll_deg, float pitch_deg, float yaw_deg, float roll_dps,
+                             float pitch_dps, float yaw_dps);
 void flight_state_publish(uint8_t state);
 void flight_snapshot_read(flight_snapshot_t *snapshot);
 void flight_attitude_invalidate(void);

@@ -2,111 +2,102 @@
 #include "SPL06.h"
 #include "spi.h"
 
-
-#define SPL06_CS_SetBits uav_sensor_select(3,0)      //Ìá¸ßcsÎ»
-#define SPL06_CS_ResetBits uav_sensor_select(3,1)  //½µµÍcsÎ»
-
-
+#define SPL06_CS_SetBits uav_sensor_select(3, 0)   // æé«˜csä½
+#define SPL06_CS_ResetBits uav_sensor_select(3, 1) // é™ä½csä½
 
 static struct spl0601_t spl0601;
-static struct spl0601_t *p_spl0601; 
+static struct spl0601_t *p_spl0601;
 
 float Baro_Offset, Alt_3;
 float Temperature, AltHigh;
 float BaroPressure;
 
 /**********************************************************************************************************
-*º¯ Êı Ãû: SPL06CSPin_Init
-*¹¦ÄÜËµÃ÷: SPL06 CS½ÅÊ¹ÄÜ
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-//void SPL06CSPin_Init ( void )
+ *å‡½ æ•° å: SPL06CSPin_Init
+ *åŠŸèƒ½è¯´æ˜: SPL06 CSè„šä½¿èƒ½
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+// void SPL06CSPin_Init ( void )
 //{
-//    GPIO_InitTypeDef GPIO_InitStructure;
-//    GPIO_InitStructure.GPIO_Pin = SPL06_CS_PIN;
-//    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-//    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-//    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-//    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-//    GPIO_Init ( SPL06_CS_GPIO, &GPIO_InitStructure );
-//    GPIO_SetBits ( SPL06_CS_GPIO, SPL06_CS_PIN );
-//}
+//     GPIO_InitTypeDef GPIO_InitStructure;
+//     GPIO_InitStructure.GPIO_Pin = SPL06_CS_PIN;
+//     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+//     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+//     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+//     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+//     GPIO_Init ( SPL06_CS_GPIO, &GPIO_InitStructure );
+//     GPIO_SetBits ( SPL06_CS_GPIO, SPL06_CS_PIN );
+// }
 /**********************************************************************************************************
-*º¯ Êı Ãû: SPl06Enable
-*¹¦ÄÜËµÃ÷: SPL06 Ê¹ÄÜ
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-static void SPl06Enable ( uint8_t ena )
-{
-    if ( ena )
+ *å‡½ æ•° å: SPl06Enable
+ *åŠŸèƒ½è¯´æ˜: SPL06 ä½¿èƒ½
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+static void SPl06Enable(uint8_t ena) {
+    if (ena)
         SPL06_CS_ResetBits;
     else
         SPL06_CS_SetBits;
 }
 /**********************************************************************************************************
-*º¯ Êı Ãû: SPl0601Write
-*¹¦ÄÜËµÃ÷: SPL06 ¶ÁºÍĞ´
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-static void SPl0601Write ( unsigned char regadr, unsigned char val )
-{
-    SPl06Enable ( 1 );
-    uav_sensor_byte(regadr );
-    uav_sensor_byte(val );
-    SPl06Enable ( 0 );
+ *å‡½ æ•° å: SPl0601Write
+ *åŠŸèƒ½è¯´æ˜: SPL06 è¯»å’Œå†™
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+static void SPl0601Write(unsigned char regadr, unsigned char val) {
+    SPl06Enable(1);
+    uav_sensor_byte(regadr);
+    uav_sensor_byte(val);
+    SPl06Enable(0);
 }
-static uint8_t SPl0601Read ( unsigned char regadr )
-{
+static uint8_t SPl0601Read(unsigned char regadr) {
     uint8_t reg_data;
-    SPl06Enable ( 1 );
-    uav_sensor_byte(regadr | 0x80 );
-    reg_data = uav_sensor_byte(0xff );
-    SPl06Enable ( 0 );
+    SPl06Enable(1);
+    uav_sensor_byte(regadr | 0x80);
+    reg_data = uav_sensor_byte(0xff);
+    SPl06Enable(0);
     return reg_data;
 }
 
 /**********************************************************************************************************
-*º¯ Êı Ãû: SPl0601RateSet
-*¹¦ÄÜËµÃ÷:ÉèÖÃÎÂ¶È´«¸ĞÆ÷µÄÃ¿Ãë²ÉÑù´ÎÊıÒÔ¼°¹ı²ÉÑùÂÊ
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-void SPl0601RateSet ( uint8_t iSensor, uint8_t u8SmplRate, uint8_t u8OverSmpl )
-{
+ *å‡½ æ•° å: SPl0601RateSet
+ *åŠŸèƒ½è¯´æ˜:è®¾ç½®æ¸©åº¦ä¼ æ„Ÿå™¨çš„æ¯ç§’é‡‡æ ·æ¬¡æ•°ä»¥åŠè¿‡é‡‡æ ·ç‡
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+void SPl0601RateSet(uint8_t iSensor, uint8_t u8SmplRate, uint8_t u8OverSmpl) {
     uint8_t reg = 0;
     int32_t i32kPkT = 0;
-    switch ( u8SmplRate )
-    {
+    switch (u8SmplRate) {
     case 2:
-        reg |= ( 1 << 4 );
+        reg |= (1 << 4);
         break;
     case 4:
-        reg |= ( 2 << 4 );
+        reg |= (2 << 4);
         break;
     case 8:
-        reg |= ( 3 << 4 );
+        reg |= (3 << 4);
         break;
     case 16:
-        reg |= ( 4 << 4 );
+        reg |= (4 << 4);
         break;
     case 32:
-        reg |= ( 5 << 4 );
+        reg |= (5 << 4);
         break;
     case 64:
-        reg |= ( 6 << 4 );
+        reg |= (6 << 4);
         break;
     case 128:
-        reg |= ( 7 << 4 );
+        reg |= (7 << 4);
         break;
     case 1:
     default:
         break;
     }
-    switch ( u8OverSmpl )
-    {
+    switch (u8OverSmpl) {
     case 2:
         reg |= 1;
         i32kPkT = 1572864;
@@ -141,242 +132,220 @@ void SPl0601RateSet ( uint8_t iSensor, uint8_t u8SmplRate, uint8_t u8OverSmpl )
         break;
     }
 
-    if ( iSensor == 0 )
-    {
+    if (iSensor == 0) {
         p_spl0601->i32kP = i32kPkT;
-        SPl0601Write ( 0x06, reg );
-        if ( u8OverSmpl > 8 )
-        {
-            reg = SPl0601Read ( 0x09 );
-            SPl0601Write ( 0x09, reg | 0x04 );
+        SPl0601Write(0x06, reg);
+        if (u8OverSmpl > 8) {
+            reg = SPl0601Read(0x09);
+            SPl0601Write(0x09, reg | 0x04);
         }
     }
-    if ( iSensor == 1 )
-    {
+    if (iSensor == 1) {
         p_spl0601->i32kT = i32kPkT;
-        SPl0601Write ( 0x07, reg | 0x80 ); //Using mems temperature
-        if ( u8OverSmpl > 8 )
-        {
-            reg = SPl0601Read ( 0x09 );
-            SPl0601Write ( 0x09, reg | 0x08 );
+        SPl0601Write(0x07, reg | 0x80); // Using mems temperature
+        if (u8OverSmpl > 8) {
+            reg = SPl0601Read(0x09);
+            SPl0601Write(0x09, reg | 0x08);
         }
     }
-
 }
 
 /**********************************************************************************************************
-*º¯ Êı Ãû: SPl0601GetCalibrationParam
-*¹¦ÄÜËµÃ÷: »ñÈ¡Ğ£×¼²ÎÊı
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-void SPl0601GetCalibrationParam ( void )
-{
+ *å‡½ æ•° å: SPl0601GetCalibrationParam
+ *åŠŸèƒ½è¯´æ˜: è·å–æ ¡å‡†å‚æ•°
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+void SPl0601GetCalibrationParam(void) {
     uint32 h;
     uint32 m;
     uint32 l;
-    h =  SPl0601Read ( 0x10 );
-    l  =  SPl0601Read ( 0x11 );
-    p_spl0601->calib_param.c0 = ( int16_t ) h << 4 | l >> 4;
-    p_spl0601->calib_param.c0 = ( p_spl0601->calib_param.c0 & 0x0800 ) ? ( 0xF000 | p_spl0601->calib_param.c0 ) : p_spl0601->calib_param.c0;
-    h =  SPl0601Read ( 0x11 );
-    l  =  SPl0601Read ( 0x12 );
-    p_spl0601->calib_param.c1 = ( int16_t ) ( h & 0x0F ) << 8 | l;
-    p_spl0601->calib_param.c1 = ( p_spl0601->calib_param.c1 & 0x0800 ) ? ( 0xF000 | p_spl0601->calib_param.c1 ) : p_spl0601->calib_param.c1;
-    h =  SPl0601Read ( 0x13 );
-    m =  SPl0601Read ( 0x14 );
-    l =  SPl0601Read ( 0x15 );
-    p_spl0601->calib_param.c00 = ( int32_t ) h << 12 | ( int32_t ) m << 4 | ( int32_t ) l >> 4;
-    p_spl0601->calib_param.c00 = ( p_spl0601->calib_param.c00 & 0x080000 ) ? ( 0xFFF00000 | p_spl0601->calib_param.c00 ) : p_spl0601->calib_param.c00;
-    h =  SPl0601Read ( 0x15 );
-    m =  SPl0601Read ( 0x16 );
-    l =  SPl0601Read ( 0x17 );
-    p_spl0601->calib_param.c10 = ( int32_t ) h << 16 | ( int32_t ) m << 8 | l;
-    p_spl0601->calib_param.c10 = ( p_spl0601->calib_param.c10 & 0x080000 ) ? ( 0xFFF00000 | p_spl0601->calib_param.c10 ) : p_spl0601->calib_param.c10;
-    h =  SPl0601Read ( 0x18 );
-    l  =  SPl0601Read ( 0x19 );
-    p_spl0601->calib_param.c01 = ( int16_t ) h << 8 | l;
-    h =  SPl0601Read ( 0x1A );
-    l  =  SPl0601Read ( 0x1B );
-    p_spl0601->calib_param.c11 = ( int16_t ) h << 8 | l;
-    h =  SPl0601Read ( 0x1C );
-    l  =  SPl0601Read ( 0x1D );
-    p_spl0601->calib_param.c20 = ( int16_t ) h << 8 | l;
-    h =  SPl0601Read ( 0x1E );
-    l  =  SPl0601Read ( 0x1F );
-    p_spl0601->calib_param.c21 = ( int16_t ) h << 8 | l;
-    h =  SPl0601Read ( 0x20 );
-    l  =  SPl0601Read ( 0x21 );
-    p_spl0601->calib_param.c30 = ( int16_t ) h << 8 | l;
+    h = SPl0601Read(0x10);
+    l = SPl0601Read(0x11);
+    p_spl0601->calib_param.c0 = (int16_t)h << 4 | l >> 4;
+    p_spl0601->calib_param.c0 = (p_spl0601->calib_param.c0 & 0x0800)
+                                    ? (0xF000 | p_spl0601->calib_param.c0)
+                                    : p_spl0601->calib_param.c0;
+    h = SPl0601Read(0x11);
+    l = SPl0601Read(0x12);
+    p_spl0601->calib_param.c1 = (int16_t)(h & 0x0F) << 8 | l;
+    p_spl0601->calib_param.c1 = (p_spl0601->calib_param.c1 & 0x0800)
+                                    ? (0xF000 | p_spl0601->calib_param.c1)
+                                    : p_spl0601->calib_param.c1;
+    h = SPl0601Read(0x13);
+    m = SPl0601Read(0x14);
+    l = SPl0601Read(0x15);
+    p_spl0601->calib_param.c00 = (int32_t)h << 12 | (int32_t)m << 4 | (int32_t)l >> 4;
+    p_spl0601->calib_param.c00 = (p_spl0601->calib_param.c00 & 0x080000)
+                                     ? (0xFFF00000 | p_spl0601->calib_param.c00)
+                                     : p_spl0601->calib_param.c00;
+    h = SPl0601Read(0x15);
+    m = SPl0601Read(0x16);
+    l = SPl0601Read(0x17);
+    p_spl0601->calib_param.c10 = (int32_t)h << 16 | (int32_t)m << 8 | l;
+    p_spl0601->calib_param.c10 = (p_spl0601->calib_param.c10 & 0x080000)
+                                     ? (0xFFF00000 | p_spl0601->calib_param.c10)
+                                     : p_spl0601->calib_param.c10;
+    h = SPl0601Read(0x18);
+    l = SPl0601Read(0x19);
+    p_spl0601->calib_param.c01 = (int16_t)h << 8 | l;
+    h = SPl0601Read(0x1A);
+    l = SPl0601Read(0x1B);
+    p_spl0601->calib_param.c11 = (int16_t)h << 8 | l;
+    h = SPl0601Read(0x1C);
+    l = SPl0601Read(0x1D);
+    p_spl0601->calib_param.c20 = (int16_t)h << 8 | l;
+    h = SPl0601Read(0x1E);
+    l = SPl0601Read(0x1F);
+    p_spl0601->calib_param.c21 = (int16_t)h << 8 | l;
+    h = SPl0601Read(0x20);
+    l = SPl0601Read(0x21);
+    p_spl0601->calib_param.c30 = (int16_t)h << 8 | l;
 }
 
 /**********************************************************************************************************
-*º¯ Êı Ãû: SPl0601StartTemperature
-*¹¦ÄÜËµÃ÷: ·¢ÆğÒ»´ÎÎÂ¶È»òÑ¹Á¦²âÁ¿
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-void SPl0601StartTemperature ( void )
-{
-    SPl0601Write ( 0x08, 0x02 );
-}
+ *å‡½ æ•° å: SPl0601StartTemperature
+ *åŠŸèƒ½è¯´æ˜: å‘èµ·ä¸€æ¬¡æ¸©åº¦æˆ–å‹åŠ›æµ‹é‡
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+void SPl0601StartTemperature(void) { SPl0601Write(0x08, 0x02); }
 /**********************************************************************************************************
-*º¯ Êı Ãû: SPI0601StartPressure
-*¹¦ÄÜËµÃ÷: ·¢ÆğÒ»´ÎÎÂ¶È»òÑ¹Á¦²âÁ¿
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-void SPI0601StartPressure ( void )
-{
-    SPl0601Write ( 0x08, 0x01 );
-}
+ *å‡½ æ•° å: SPI0601StartPressure
+ *åŠŸèƒ½è¯´æ˜: å‘èµ·ä¸€æ¬¡æ¸©åº¦æˆ–å‹åŠ›æµ‹é‡
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+void SPI0601StartPressure(void) { SPl0601Write(0x08, 0x01); }
 /**********************************************************************************************************
-*º¯ Êı Ãû: SPl0601StartContinuous
-*¹¦ÄÜËµÃ÷: ·¢ÆğÒ»´ÎÎÂ¶È»òÑ¹Á¦²âÁ¿
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-void SPl0601StartContinuous ( uint8_t mode )
-{
-    SPl0601Write ( 0x08, mode + 4 );
-}
+ *å‡½ æ•° å: SPl0601StartContinuous
+ *åŠŸèƒ½è¯´æ˜: å‘èµ·ä¸€æ¬¡æ¸©åº¦æˆ–å‹åŠ›æµ‹é‡
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+void SPl0601StartContinuous(uint8_t mode) { SPl0601Write(0x08, mode + 4); }
 
 /**********************************************************************************************************
-*º¯ Êı Ãû: SPl0601GetRawTemp
-*¹¦ÄÜËµÃ÷: »ñÈ¡Ô­Ê¼ÎÂ¶ÈÖµ
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-void SPl0601GetRawTemp ( void )
-{
+ *å‡½ æ•° å: SPl0601GetRawTemp
+ *åŠŸèƒ½è¯´æ˜: è·å–åŸå§‹æ¸©åº¦å€¼
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+void SPl0601GetRawTemp(void) {
     uint8_t Spl06Temp[3] = {0};
-    Spl06Temp[0] = SPl0601Read ( 0x03 );
-    Spl06Temp[1] = SPl0601Read ( 0x04 );
-    Spl06Temp[2] = SPl0601Read ( 0x05 );
-    p_spl0601->i32rawTemperature = ( int32_t ) Spl06Temp[0] << 16 | ( int32_t ) Spl06Temp[1] << 8 | ( int32_t ) Spl06Temp[2];
-    p_spl0601->i32rawTemperature = ( p_spl0601->i32rawTemperature & 0x800000 ) ? ( 0xFF000000 | p_spl0601->i32rawTemperature ) : p_spl0601->i32rawTemperature;
+    Spl06Temp[0] = SPl0601Read(0x03);
+    Spl06Temp[1] = SPl0601Read(0x04);
+    Spl06Temp[2] = SPl0601Read(0x05);
+    p_spl0601->i32rawTemperature =
+        (int32_t)Spl06Temp[0] << 16 | (int32_t)Spl06Temp[1] << 8 | (int32_t)Spl06Temp[2];
+    p_spl0601->i32rawTemperature = (p_spl0601->i32rawTemperature & 0x800000)
+                                       ? (0xFF000000 | p_spl0601->i32rawTemperature)
+                                       : p_spl0601->i32rawTemperature;
 }
 
 /**********************************************************************************************************
-*º¯ Êı Ãû: SPl0601GetRawPressure
-*¹¦ÄÜËµÃ÷: »ñÈ¡Ô­Ê¼Ñ¹Á¦Öµ
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-void SPl0601GetRawPressure ( void )
-{
+ *å‡½ æ•° å: SPl0601GetRawPressure
+ *åŠŸèƒ½è¯´æ˜: è·å–åŸå§‹å‹åŠ›å€¼
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+void SPl0601GetRawPressure(void) {
     uint8_t Spl06Pressure[3];
-    Spl06Pressure[0] = SPl0601Read ( 0x00 );
-    Spl06Pressure[1] = SPl0601Read ( 0x01 );
-    Spl06Pressure[2] = SPl0601Read ( 0x02 );
-    p_spl0601->i32rawPressure = ( int32_t ) Spl06Pressure[0] << 16 | ( int32_t ) Spl06Pressure[1] << 8 | ( int32_t )Spl06Pressure[2];
-    p_spl0601->i32rawPressure = ( p_spl0601->i32rawPressure & 0x800000 ) ? ( 0xFF000000 | p_spl0601->i32rawPressure ) : p_spl0601->i32rawPressure;
+    Spl06Pressure[0] = SPl0601Read(0x00);
+    Spl06Pressure[1] = SPl0601Read(0x01);
+    Spl06Pressure[2] = SPl0601Read(0x02);
+    p_spl0601->i32rawPressure = (int32_t)Spl06Pressure[0] << 16 | (int32_t)Spl06Pressure[1] << 8 |
+                                (int32_t)Spl06Pressure[2];
+    p_spl0601->i32rawPressure = (p_spl0601->i32rawPressure & 0x800000)
+                                    ? (0xFF000000 | p_spl0601->i32rawPressure)
+                                    : p_spl0601->i32rawPressure;
 }
 /**********************************************************************************************************
-*º¯ Êı Ãû: Drv_Spl0601_Init
-*¹¦ÄÜËµÃ÷: Spl0601³õÊ¼»¯
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-uint8_t Drv_Spl0601_Init ( void )
-{
-	/*Æ¬Ñ¡³õÊ¼»¯*/
-	//SPL06CSPin_Init ();
+ *å‡½ æ•° å: Drv_Spl0601_Init
+ *åŠŸèƒ½è¯´æ˜: Spl0601åˆå§‹åŒ–
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+uint8_t Drv_Spl0601_Init(void) {
+    /*ç‰‡é€‰åˆå§‹åŒ–*/
+    // SPL06CSPin_Init ();
     p_spl0601 = &spl0601;
     p_spl0601->i32rawPressure = 0;
     p_spl0601->i32rawTemperature = 0;
-    p_spl0601->chip_id = SPl0601Read ( 0x0D );
+    p_spl0601->chip_id = SPl0601Read(0x0D);
     SPl0601GetCalibrationParam();
-    SPl0601RateSet ( PRESSURE_SENSOR, 128, 16 );
-    SPl0601RateSet ( TEMPERATURE_SENSOR, 8, 8 );
-    SPl0601StartContinuous ( CONTINUOUS_P_AND_T );
-	if(p_spl0601->chip_id == 0x10)
-	{
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
+    SPl0601RateSet(PRESSURE_SENSOR, 128, 16);
+    SPl0601RateSet(TEMPERATURE_SENSOR, 8, 8);
+    SPl0601StartContinuous(CONTINUOUS_P_AND_T);
+    if (p_spl0601->chip_id == 0x10) {
+        return 0;
+    } else {
+        return 1;
+    }
 }
 /**********************************************************************************************************
-*º¯ Êı Ãû: Spl0601GetTemperature
-*¹¦ÄÜËµÃ÷: »ñÈ¡ÎÂ¶ÈÖµ
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-float Spl0601GetTemperature ( void )
-{
+ *å‡½ æ•° å: Spl0601GetTemperature
+ *åŠŸèƒ½è¯´æ˜: è·å–æ¸©åº¦å€¼
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+float Spl0601GetTemperature(void) {
     float fTCompensate;
     float fTsc;
-    fTsc = p_spl0601->i32rawTemperature / ( float ) p_spl0601->i32kT;
-    fTCompensate =  p_spl0601->calib_param.c0 * 0.5 + p_spl0601->calib_param.c1 * fTsc;
+    fTsc = p_spl0601->i32rawTemperature / (float)p_spl0601->i32kT;
+    fTCompensate = p_spl0601->calib_param.c0 * 0.5 + p_spl0601->calib_param.c1 * fTsc;
     return fTCompensate;
 }
 /**********************************************************************************************************
-*º¯ Êı Ãû: Spl0601GetPressure
-*¹¦ÄÜËµÃ÷: »ñÈ¡Ñ¹Á¦Öµ
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-float Spl0601GetPressure ( void )
-{
+ *å‡½ æ•° å: Spl0601GetPressure
+ *åŠŸèƒ½è¯´æ˜: è·å–å‹åŠ›å€¼
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+float Spl0601GetPressure(void) {
     float fTsc, fPsc;
     float qua2, qua3;
     float fPCompensate;
-    fTsc = p_spl0601->i32rawTemperature / ( float ) p_spl0601->i32kT;
-    fPsc = p_spl0601->i32rawPressure / ( float ) p_spl0601->i32kP;
-    qua2 = p_spl0601->calib_param.c10 + fPsc * ( p_spl0601->calib_param.c20 + fPsc * p_spl0601->calib_param.c30 );
-    qua3 = fTsc * fPsc * ( p_spl0601->calib_param.c11 + fPsc * p_spl0601->calib_param.c21 );   
-    fPCompensate = p_spl0601->calib_param.c00 + fPsc * qua2 + fTsc * p_spl0601->calib_param.c01 + qua3;
+    fTsc = p_spl0601->i32rawTemperature / (float)p_spl0601->i32kT;
+    fPsc = p_spl0601->i32rawPressure / (float)p_spl0601->i32kP;
+    qua2 = p_spl0601->calib_param.c10 +
+           fPsc * (p_spl0601->calib_param.c20 + fPsc * p_spl0601->calib_param.c30);
+    qua3 = fTsc * fPsc * (p_spl0601->calib_param.c11 + fPsc * p_spl0601->calib_param.c21);
+    fPCompensate =
+        p_spl0601->calib_param.c00 + fPsc * qua2 + fTsc * p_spl0601->calib_param.c01 + qua3;
     return fPCompensate;
 }
 
-
-
 /**********************************************************************************************************
-*º¯ Êı Ãû: Drv_Spl0601_Read
-*¹¦ÄÜËµÃ÷: ¶ÁÈ¡Ñ¹Á¦ÎÂ¶ÈÖµ
-*ĞÎ    ²Î: ÎŞ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-float Drv_SPl0601_Read ( void )
-{
-	  
+ *å‡½ æ•° å: Drv_Spl0601_Read
+ *åŠŸèƒ½è¯´æ˜: è¯»å–å‹åŠ›æ¸©åº¦å€¼
+ *å½¢    å‚: æ— 
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+float Drv_SPl0601_Read(void) {
+
     SPl0601GetRawTemp();
     Temperature = Spl0601GetTemperature();
     SPl0601GetRawPressure();
     BaroPressure = Spl0601GetPressure();
-	
-   return  BaroPressure;
+
+    return BaroPressure;
 }
-
-
 
 /**********************************************************************************************************
-*º¯ Êı Ãû: Spl0601Get
-*¹¦ÄÜËµÃ÷: ¿ÉÓÃÑ¹Á¦Öµ¼°ÎÂ¶ÈÖµ¶ÁÈ¡
-*ĞÎ    ²Î: ¸ß¶ÈÖµ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-void Spl0601Get(float *Hight)
-{	
-	float Baro = Drv_SPl0601_Read();
-	*Hight = 44330.77f * (1 - powf((Baro / 101325),0.190263f));
+ *å‡½ æ•° å: Spl0601Get
+ *åŠŸèƒ½è¯´æ˜: å¯ç”¨å‹åŠ›å€¼åŠæ¸©åº¦å€¼è¯»å–
+ *å½¢    å‚: é«˜åº¦å€¼
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+void Spl0601Get(float *Hight) {
+    float Baro = Drv_SPl0601_Read();
+    *Hight = 44330.77f * (1 - powf((Baro / 101325), 0.190263f));
 }
 /**********************************************************************************************************
-*º¯ Êı Ãû: GetTemputer
-*¹¦ÄÜËµÃ÷: »ñÈ¡ÎÂ¶ÈÖµ
-*ĞÎ    ²Î: ÎÂ¶ÈÖµ
-*·µ »Ø Öµ: ÎŞ
-**********************************************************************************************************/
-int32_t GetTemputer(void)
-{	
-	return (int32_t)Temperature;
-}
-
-
-
-
-
-
+ *å‡½ æ•° å: GetTemputer
+ *åŠŸèƒ½è¯´æ˜: è·å–æ¸©åº¦å€¼
+ *å½¢    å‚: æ¸©åº¦å€¼
+ *è¿” å› å€¼: æ— 
+ **********************************************************************************************************/
+int32_t GetTemputer(void) { return (int32_t)Temperature; }

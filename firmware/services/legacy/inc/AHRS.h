@@ -11,138 +11,118 @@
 #include "AK8975.h"
 #include "BMI088_1.h"
 #include "math.h"
-//==ÒıÓÃ
+//==å¼•ç”¨
 
+//==å®šä¹‰
 
+typedef struct {
+    //
+    u8 data_sta; // 0ä¸å¯ç”¨  1å¯ç”¨
+    float IEM[3][3];
+    //
+    vec3_f f_gyrRaw;
+    vec3_f f_accRaw;
+    //
+    vec3_f f_gyr_dps;
+    vec3_f f_acc_cmpss;
+    //
+    vec3_f f_gyr_dps_nb;
+    vec3_f f_gyr_radps_nb;
+    vec3_f f_acc_cmpss_nb;
+    //
+    float f_temperature;
+    vec3_f gyrSensitivity;
+    vec3_f accSensitivity;
+    //
 
-//==¶¨Òå
+} _imuData_st;
 
+typedef struct {
+    acc_raw_data_t acc;
+    Vector3f_t accoffsetbias; // åŠ é€Ÿåº¦è®¡é›¶åè¯¯å·®
+    Vector3f_t accscalebias;  // åŠ é€Ÿåº¦è®¡åˆ»åº¦è¯¯å·®
 
+    gyro_raw_data_t gyro;
+    Vector3f_t gyrooffsetbias; // é™€èºä»ªé›¶åè¯¯å·®
+    Vector3f_t gyroscalebias;  // é™€èºä»ªåˆ»åº¦è¯¯å·®
 
-typedef struct
-{
-	//
-	u8 data_sta;  //0²»¿ÉÓÃ  1¿ÉÓÃ
-	float IEM[3][3];
-	//
-	vec3_f f_gyrRaw;
-	vec3_f f_accRaw;
-	//
-	vec3_f f_gyr_dps;
-	vec3_f f_acc_cmpss;	
-	//
-	vec3_f f_gyr_dps_nb;
-	vec3_f f_gyr_radps_nb;
-	vec3_f f_acc_cmpss_nb;		
-	//
-	float f_temperature;
-	vec3_f gyrSensitivity;
-	vec3_f accSensitivity;
-	//
-	
-}_imuData_st;
+    mag_raw_data_t mag;
+    Vector3f_t magoffsetbias; // ç£åŠ›è®¡é›¶åè¯¯å·®
+    Vector3f_t magscalebias;  // ç£åŠ›è®¡åˆ»åº¦è¯¯å·®
 
-
-typedef struct
-{
-	acc_raw_data_t acc;
-	Vector3f_t accoffsetbias;  //¼ÓËÙ¶È¼ÆÁãÆ«Îó²î
-	Vector3f_t accscalebias;   //¼ÓËÙ¶È¼Æ¿Ì¶ÈÎó²î
-	
-	
-	gyro_raw_data_t gyro;
-	Vector3f_t gyrooffsetbias; //ÍÓÂİÒÇÁãÆ«Îó²î
-	Vector3f_t gyroscalebias;   //ÍÓÂİÒÇ¿Ì¶ÈÎó²î
-	
-	mag_raw_data_t mag;
-	Vector3f_t magoffsetbias;  //´ÅÁ¦¼ÆÁãÆ«Îó²î
-	Vector3f_t magscalebias;   //´ÅÁ¦¼Æ¿Ì¶ÈÎó²î
-	
-	
-	float f_temperature;
-  float Pressure;
-	float Hight;
+    float f_temperature;
+    float Pressure;
+    float Hight;
 } _imuData_all;
 
+typedef struct _AHRS_DATA {
+    float roll;
+    float pitch;
+    float yaw;
 
+    float rollSpeed;
+    float pitchSpeed;
+    float yawSpeed;
 
+    float q0;
+    float q1;
+    float q2;
+    float q3;
 
-typedef struct _AHRS_DATA
-{
-	float roll;
-	float pitch;
-	float yaw;
-	
-	float rollSpeed;
-	float pitchSpeed;
-	float yawSpeed;
-	
-	float q0;
-	float q1;
-	float q2;
-	float q3;
-	
 } _ahrs_data;
 
-
-
-
-typedef struct
-{
-	u8 test_u8[4];
-	float test[3];
-}__attribute__ ((__packed__)) _test_st;
+typedef struct {
+    u8 test_u8[4];
+    float test[3];
+} __attribute__((__packed__)) _test_st;
 extern _test_st test_st;
 
+//==æ•°æ®å£°æ˜
+extern _imuData_st st_imuData;
 
-//==Êı¾İÉùÃ÷
-extern _imuData_st st_imuData;	
+//==å‡½æ•°å£°æ˜
 
-//==º¯ÊıÉùÃ÷
+// static
 
-//static
-
-
-//public
+// public
 
 void AHRS_Uart4_IDLE_Proc(u8 size);
 
 void Sensors_Update();
 void Sensors_Init();
-/*IMU´«¸ĞÆ÷ÁéÃô¶È³õÊ¼»¯*/
-void ImuSensitivityInit(u8 ins_calibrated,vec3_f accRefValue);
-/*IMU´«¸ĞÆ÷Êı¾İ»ñÈ¡*/
-void ImuDataGet(vec3_s16 gyrRaw,vec3_s16 accRaw);
-/*IMUÎÂ¶È»ñÈ¡*/
+/*IMUä¼ æ„Ÿå™¨çµæ•åº¦åˆå§‹åŒ–*/
+void ImuSensitivityInit(u8 ins_calibrated, vec3_f accRefValue);
+/*IMUä¼ æ„Ÿå™¨æ•°æ®è·å–*/
+void ImuDataGet(vec3_s16 gyrRaw, vec3_s16 accRaw);
+/*IMUæ¸©åº¦è·å–*/
 void ImuTemperatureGet(float f_temperature);
-/*IMUÊı¾İ¼ÆËã´¦Àí*/
-void ImuDataCalcu(u8 ins_calibrated,vec3_f gyrOffset,vec3_f accOffset,float IEM[3][3]);
+/*IMUæ•°æ®è®¡ç®—å¤„ç†*/
+void ImuDataCalcu(u8 ins_calibrated, vec3_f gyrOffset, vec3_f accOffset, float IEM[3][3]);
 
-void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _imuData_all* imu);
+void IMU_Update(acc_raw_data_t acc, gyro_raw_data_t gyro, mag_raw_data_t mag, _imuData_all *imu);
 
 int AHRS_Mahony_Update(_imuData_all imu, _ahrs_data *attitude);
 void AHRS_Kalman_Update(_imuData_all imu, _ahrs_data *attitude);
 
+void Sensor_Calibration(_imuData_all *imu);
 
-void Sensor_Calibration(_imuData_all* imu);
+void Mag_Zero_Offset_Calibration(_imuData_all *imu);
 
-void Mag_Zero_Offset_Calibration(_imuData_all* imu);
+void Simple_Zero_Offset_Calibration(_imuData_all *imu, Vector3f_t *offset); // ç®€å•é›¶åæ ¡å‡†
 
-void Simple_Zero_Offset_Calibration(_imuData_all* imu, Vector3f_t * offset);  //¼òµ¥ÁãÆ«Ğ£×¼
+void SensorData_Task_Proc(void const *argument);
 
-void SensorData_Task_Proc(void const * argument);
+void LMS_Fitting(float raw[6][3], Vector3f_t *offset, Vector3f_t *scale); // åŸºäºæ±‚å¯¼çš„æ¤­çƒæ‹Ÿåˆå‡½æ•°
 
+void Acc_LMS_Calibration(_imuData_all *imu, Vector3f_t *offset,
+                         Vector3f_t *scale); // åŠ é€Ÿåº¦è®¡æ¤­çƒæ‹Ÿåˆ
 
-void LMS_Fitting(float raw[6][3], Vector3f_t * offset, Vector3f_t * scale);  //»ùÓÚÇóµ¼µÄÍÖÇòÄâºÏº¯Êı
- 
-void Acc_LMS_Calibration(_imuData_all* imu, Vector3f_t * offset, Vector3f_t * scale);   //¼ÓËÙ¶È¼ÆÍÖÇòÄâºÏ
+void IMU_Temperature_Control_Init(); // IMUæ’æ¸©æ§åˆ¶åˆå§‹åŒ–
 
-void IMU_Temperature_Control_Init();  //IMUºãÎÂ¿ØÖÆ³õÊ¼»¯
-
-void IMU_Temperature_Control(float target);  //IMUºãÎÂ¿ØÖÆ  ÊäÈëÎÂ¶È
+void IMU_Temperature_Control(float target); // IMUæ’æ¸©æ§åˆ¶  è¾“å…¥æ¸©åº¦
 
 float invSqrt(float x);
-float DATA_Trans(u8 Data_1,u8 Data_2,u8 Data_3,u8 Data_4);
+float DATA_Trans(u8 Data_1, u8 Data_2, u8 Data_3, u8 Data_4);
 
 void Cold_Start_ARHS(_imuData_all imu, _ahrs_data *attitude);
 

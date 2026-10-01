@@ -1,4 +1,7 @@
 set(FIRMWARE_SOURCES
+  firmware/app/flight_machine.c
+  firmware/services/parameters/calibration_record.c
+  firmware/services/parameters/param_journal.c
   firmware/platform/stm32/sensor_port.c
   firmware/drivers/storage/w25qxx.c
   firmware/os/failure_hooks.c
@@ -95,6 +98,7 @@ set(FIRMWARE_SOURCES
   firmware/platform/syscalls.c
 )
 set(FIRMWARE_INCLUDES
+  firmware/services/parameters
   firmware/drivers/storage
   firmware/drivers/display
   firmware/boards/stm32

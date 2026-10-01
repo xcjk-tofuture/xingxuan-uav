@@ -8,6 +8,7 @@
 #include "star_dispatch.h"
 #include <string.h>
 #include "flight_snapshot.h"
+#include "flash_proc.h"
 osThreadId PCTaskHandle;
 typedef struct {
     uint16_t length;
@@ -23,6 +24,22 @@ static uint8_t business(void *context, const star_frame_t *q, star_frame_t *r) {
     (void)context;
 
     flight_snapshot_t s;
+
+    if (q->command == STAR_CMD_UAV_DIAGNOSTICS) {
+        if (q->length)
+            return STAR_BAD_LENGTH;
+        uint32_t rejected, sequence[3];
+        flight_snapshot_read(&s);
+        uav_storage_diagnostics(&rejected, sequence);
+        r->payload[1] = s.fault;
+        star_write_u32(r->payload + 2, s.transitions);
+        star_write_u32(r->payload + 6, rejected);
+        for (unsigned i = 0; i < 3; i++)
+            star_write_u32(r->payload + 10 + i * 4, sequence[i]);
+        r->payload[22] = uav_storage_busy();
+        r->length = 23;
+        return STAR_OK;
+    }
     if (q->command != STAR_CMD_STATUS && q->command != STAR_CMD_UAV_ATTITUDE)
         return STAR_UNSUPPORTED;
     if (q->length)
@@ -39,7 +56,7 @@ int PC_Init(void) {
     receive_queue = xQueueCreate(4, sizeof(rx_packet_t));
     star_parser_init(&parser);
     dispatcher.device_id = 0x58550001u;
-    dispatcher.capabilities = STAR_CAP_STATUS | STAR_CAP_TELEMETRY_PERIOD;
+    dispatcher.capabilities = STAR_CAP_STATUS | STAR_CAP_TELEMETRY_PERIOD | STAR_CAP_DIAGNOSTICS;
     dispatcher.telemetry_period_ms = 50;
     dispatcher.minimum_period_ms = 20;
     dispatcher.business = business;

@@ -21,7 +21,7 @@
 #define CALIBRATION_COUNT 500 // 决定用多少个值去做校准
 
 extern void UAV_Read_Param_IMU(_imuData_all *imu_data);
-extern void UAV_Write_Param_IMU(_imuData_all imu_data);
+extern int UAV_Write_Param_IMU(_imuData_all imu_data);
 
 extern u8 uart4RX[200];
 

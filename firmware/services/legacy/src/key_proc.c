@@ -3,6 +3,7 @@
 #include "key_proc.h"
 
 #include "sbus_proc.h"
+#include "flight_snapshot.h"
 
 u8 keyUp, keyDown, keyOld, keyValue;
 
@@ -25,13 +26,15 @@ void Key_Task_Proc(void const *argument) {
             keyCount = 0;
         if (keyValue == 2)
             keyCount++;
-        if (keyUp == 2 && keyCount >= 100) { // 长按逻辑处理
+        flight_snapshot_t flight;
+        flight_snapshot_read(&flight);
+        if (keyUp == 2 && keyCount >= 100 && flight.state == 0) { // 长按逻辑处理
             if (sbus_calibration_active()) {
                 uav_display_request_page(1);
                 sbus_request_calibration(1);
             }
 
-            if (!sbus_calibration_active()) {
+            else {
                 uav_display_request_page(19);
                 sbus_request_calibration(0); // 校准遥控器
             }

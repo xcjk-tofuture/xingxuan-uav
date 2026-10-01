@@ -29,6 +29,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+extern void app_fatal(void);
+#include "pc_proc.h"
 #include "usart.h"
 #include "usb_otg.h"
 #include "gpio.h"
@@ -45,7 +47,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 u8 SbusRxBuf[100];
-u8 BleLogRxBuf[100];
+u8 BleLogRxBuf[200];
 u8 uart1RX[100];
 u8 uart1TX[100];
 u8 uart2RX[200];
@@ -68,7 +70,7 @@ u8 uart5TX[200];
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-extern void W25QXX_Init(); 
+extern int W25QXX_Init(void); 
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -138,18 +140,22 @@ int main(void)
 	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_4);
 
 	
-	HAL_UARTEx_ReceiveToIdle_DMA(&huart6, SbusRxBuf, 100);
-	HAL_UARTEx_ReceiveToIdle_DMA(&huart1, uart1RX, 100);
-	HAL_UARTEx_ReceiveToIdle_DMA(&huart5, uart5RX, 200);
-	HAL_UARTEx_ReceiveToIdle_DMA(&huart4, uart4RX, 200);
-	HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2RX, 200);
-	HAL_UARTEx_ReceiveToIdle_DMA(&huart3, BleLogRxBuf, 200);
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart6, SbusRxBuf, sizeof(SbusRxBuf));
+    __HAL_DMA_DISABLE_IT(huart6.hdmarx, DMA_IT_HT);
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart1, uart1RX, sizeof(uart1RX));
+    __HAL_DMA_DISABLE_IT(huart1.hdmarx, DMA_IT_HT);
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart5, uart5RX, sizeof(uart5RX));
+    __HAL_DMA_DISABLE_IT(huart5.hdmarx, DMA_IT_HT);
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart4, uart4RX, sizeof(uart4RX));
+    __HAL_DMA_DISABLE_IT(huart4.hdmarx, DMA_IT_HT);
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2RX, sizeof(uart2RX));
+    __HAL_DMA_DISABLE_IT(huart2.hdmarx, DMA_IT_HT);
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart3, BleLogRxBuf, sizeof(BleLogRxBuf));
+    __HAL_DMA_DISABLE_IT(huart3.hdmarx, DMA_IT_HT);
 	//HAL_UARTEx_ReceiveToIdle_DMA(&huart4, uart4RX, 100)
 	//spi cs脚初始化
-  OLED_Init();                           //OLED初始
-  OLED_Clear();                         //清屏
 
-	W25QXX_Init();                        //flash初始化
+	if(W25QXX_Init()!=0)Error_Handler();   //flash初始化
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
@@ -220,33 +226,38 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 
 		if(huart->Instance == USART1)
 	{
-		//HAL_UART_Transmit_DMA(&huart1, uart1RX, Size);
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart1, uart1RX, 100);
+		PC_Data_Rx_Proc(Size);
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart1, uart1RX, sizeof(uart1RX));
+    __HAL_DMA_DISABLE_IT(huart1.hdmarx, DMA_IT_HT);
 	}	
 	else if(huart->Instance == USART2)
 	{
 		//HAL_UART_Transmit(&huart2, uart2RX, Size, 50);
 		Flow_Data_Proc(Size);
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2RX, 200);		
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2RX, sizeof(uart2RX));
+    __HAL_DMA_DISABLE_IT(huart2.hdmarx, DMA_IT_HT);		
 	}
 	else if(huart->Instance == USART3)
 	{
-		HAL_UART_Transmit(&huart3, BleLogRxBuf, Size, 50);
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart3, BleLogRxBuf, 100);		
+		/* UART3 debug echo removed; RX interrupt never waits for TX. */
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart3, BleLogRxBuf, sizeof(BleLogRxBuf));
+    __HAL_DMA_DISABLE_IT(huart3.hdmarx, DMA_IT_HT);		
 	}
 	else if(huart->Instance == UART4)
 	{
 		//printf("1111111111");
 		AHRS_Uart4_IDLE_Proc(Size);
 //	  HAL_UART_Transmit(&huart4, uart4RX, Size, 50);
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart4, uart4RX, 200);		
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart4, uart4RX, sizeof(uart4RX));
+    __HAL_DMA_DISABLE_IT(huart4.hdmarx, DMA_IT_HT);		
 	}
 	else if(huart->Instance == UART5)
 	{
 //		printf("1111111111");
 //		AHRS_Uart4_IDLE_Proc(Size);
 		//HAL_UART_Transmit(&huart5, uart5RX, Size, 50);
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart5, uart5RX, 200);		
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart5, uart5RX, sizeof(uart5RX));
+    __HAL_DMA_DISABLE_IT(huart5.hdmarx, DMA_IT_HT);		
 	}
 		else if(huart->Instance == USART6)
 	{
@@ -257,7 +268,8 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 		//HAL_UART_Transmit(&huart3, SbusRxBuf,Size, 50);
 		Sbus_Uart6_IDLE_Proc(Size);
     //HAL_UART_Transmit_DMA(&huart1, SbusRxBuf, Size);
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart6, SbusRxBuf, 100);
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart6, SbusRxBuf, sizeof(SbusRxBuf));
+    __HAL_DMA_DISABLE_IT(huart6.hdmarx, DMA_IT_HT);
 		
 	}
 
@@ -272,7 +284,8 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 //执行HAL_UART_ErrorCallback时，还处于lock，需先unlock，
 //因为HAL_UART_Receive_IT执行时需判断如果是lock则直接返回BUSY
 		__HAL_UNLOCK(huart);		
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart6, SbusRxBuf, 100);	//SBUS接受 串口通信初始化
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart6, SbusRxBuf, sizeof(SbusRxBuf));
+    __HAL_DMA_DISABLE_IT(huart6.hdmarx, DMA_IT_HT);	//SBUS接受 串口通信初始化
 	}
 
 	
@@ -281,7 +294,8 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 //执行HAL_UART_ErrorCallback时，还处于lock，需先unlock，
 //因为HAL_UART_Receive_IT执行时需判断如果是lock则直接返回BUSY
 		__HAL_UNLOCK(huart);		
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart4, uart4RX, 100);	//SBUS接受 串口通信初始化
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart4, uart4RX, sizeof(uart4RX));
+    __HAL_DMA_DISABLE_IT(huart4.hdmarx, DMA_IT_HT);	//SBUS接受 串口通信初始化
 	}
 	
 	if(huart == &huart2)
@@ -289,7 +303,8 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 //执行HAL_UART_ErrorCallback时，还处于lock，需先unlock，
 //因为HAL_UART_Receive_IT执行时需判断如果是lock则直接返回BUSY
 		__HAL_UNLOCK(huart);		
-		HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2RX, 100);	//SBUS接受 串口通信初始化
+		HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2RX, sizeof(uart2RX));
+    __HAL_DMA_DISABLE_IT(huart2.hdmarx, DMA_IT_HT);	//SBUS接受 串口通信初始化
 	}
 
 }
@@ -329,6 +344,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
+  app_fatal();
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
   while (1)

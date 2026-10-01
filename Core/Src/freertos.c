@@ -25,12 +25,13 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#define portGET_RUN_TIME_COUNTER_VALUE()	FreeRTOSRunTimeTicks
+#define APP_RTOS_EXTERNAL_TASKS 1
+extern void app_tasks_init(void);
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-#define XC_FREERTOS_MAKE_FLAG //编译标志位 彻底解决cube改代码需要删除东西
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -40,37 +41,12 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-extern osThreadId RGBTaskHandle;
-extern osThreadId BleUart3TaskHandle;
-extern osThreadId BuzzerTaskHandle;
-extern osThreadId MotorTaskHandle;
-extern osThreadId SbusUart6TaskHandle;
-extern osThreadId FlashTaskHandle;
-extern osThreadId SensorDataTaskHandle;
-extern osThreadId OLEDTaskHandle;
-extern osThreadId PCTaskHandle;
-extern osThreadId FlowTaskHandle;
-extern osThreadId KeyTaskHandle;
 
-
-
-extern void RGB_Task_Proc(void const * argument);
-extern void Buzzer_Task_Proc(void const * argument);
-extern void Flash_Task_Proc(void const * argument);
-extern void Key_Task_Proc(void const * argument);
-extern void PC_Task_Proc(void const * argument);
-extern void Sbus_Uart6_Task_Proc(void const * argument);
-extern void Motor_Task_Proc(void const * argument);
-extern void Ble_Uart3_Task_Proc(void const * argument);
-extern void Sensor_Data_Task_Proc(void const * argument);
-extern void Flow_Task_Proc(void const * argument);
-extern void OLED_Task_Proc(void const * argument);
-#ifndef XC_FREERTOS_MAKE_FLAG
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+#if !APP_RTOS_EXTERNAL_TASKS
 /* USER CODE END Variables */
 osThreadId RGBTaskHandle;
 osThreadId KeyTaskHandle;
@@ -87,6 +63,7 @@ osThreadId MotorTaskHandle;
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 #endif
+#if !APP_RTOS_EXTERNAL_TASKS
 /* USER CODE END FunctionPrototypes */
 
 void RGB_Task_Proc(void const * argument);
@@ -114,16 +91,9 @@ void configureTimerForRunTimeStats(void);
 unsigned long getRunTimeCounterValue(void);
 
 /* USER CODE BEGIN 1 */
-/* Functions needed when configGENERATE_RUN_TIME_STATS is on */
-__weak void configureTimerForRunTimeStats(void)
-{
-
-}
-
-__weak unsigned long getRunTimeCounterValue(void)
-{
-return 0;
-}
+#endif
+__weak void configureTimerForRunTimeStats(void) {}
+__weak unsigned long getRunTimeCounterValue(void) {return 0;}
 /* USER CODE END 1 */
 
 /* USER CODE BEGIN GET_IDLE_TASK_MEMORY */
@@ -159,8 +129,8 @@ void vApplicationGetTimerTaskMemory( StaticTask_t **ppxTimerTaskTCBBuffer, Stack
   */
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
+app_tasks_init();
+/* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -175,8 +145,8 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE END RTOS_TIMERS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
-  /* USER CODE END RTOS_QUEUES */
+#if !APP_RTOS_EXTERNAL_TASKS
+/* USER CODE END RTOS_QUEUES */
 
   /* Create the thread(s) */
   /* definition and creation of RGBTask */
@@ -224,18 +194,13 @@ void MX_FREERTOS_Init(void) {
   MotorTaskHandle = osThreadCreate(osThread(MotorTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
-  /* USER CODE END RTOS_THREADS */
+#endif
+/* USER CODE END RTOS_THREADS */
 
 }
 
 /* USER CODE BEGIN Header_RGB_Task_Proc */
-#ifndef XC_FREERTOS_MAKE_FLAG
-/**
-  * @brief  Function implementing the RGBTask thread.
-  * @param  argument: Not used
-  * @retval None
-  */
+#if !APP_RTOS_EXTERNAL_TASKS
 /* USER CODE END Header_RGB_Task_Proc */
 void RGB_Task_Proc(void const * argument)
 {

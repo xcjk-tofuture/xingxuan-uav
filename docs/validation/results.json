@@ -1,0 +1,143 @@
+{
+  "debug": {
+    "build": "PASS",
+    "flash_bytes": 74208,
+    "ram_static_heap_stack_reservation_bytes": 43464,
+    "warnings": 40,
+    "largest_compiler_stack_frames": [
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/kalmanVel.c:18:6:KalmanVelUpdate",
+        "bytes": 976,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:330:6:LMS_Fitting",
+        "bytes": 944,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/flash_proc.c:246:6:Flash_Task_Proc",
+        "bytes": 752,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/app/tasks/serial_task.c:79:6:PC_Task_Proc",
+        "bytes": 400,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/flash_proc.c:228:6:UAV_Write_Param_IMU",
+        "bytes": 392,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/flash_proc.c:234:6:UAV_Write_Param_Remote",
+        "bytes": 392,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/flash_proc.c:240:6:UAV_Write_Param_Motor",
+        "bytes": 392,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/kalman3.c:240:6:KalmanUpdate",
+        "bytes": 328,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/kalman3.c:171:6:Kalman_Fil_Calc",
+        "bytes": 320,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/app/startup.c:31:6:app_tasks_init",
+        "bytes": 296,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/LevenbergMarquardt.c:21:6:LevenbergMarquardt",
+        "bytes": 280,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/kalman3.c:139:6:Kalman_Fil_Init",
+        "bytes": 248,
+        "classification": "static"
+      }
+    ],
+    "elf_sha256": "e635c6fe2f97654bbca1772c6758bb530c917e0b63ad1fceb8190ca576fa929c"
+  },
+  "release": {
+    "build": "PASS",
+    "flash_bytes": 67784,
+    "ram_static_heap_stack_reservation_bytes": 43408,
+    "warnings": 40,
+    "largest_compiler_stack_frames": [
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/kalmanVel.c:18:6:KalmanVelUpdate",
+        "bytes": 968,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:330:6:LMS_Fitting",
+        "bytes": 912,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/flash_proc.c:246:6:Flash_Task_Proc",
+        "bytes": 480,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/app/tasks/serial_task.c:79:6:PC_Task_Proc",
+        "bytes": 416,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/flash_proc.c:228:6:UAV_Write_Param_IMU",
+        "bytes": 392,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/flash_proc.c:234:6:UAV_Write_Param_Remote",
+        "bytes": 392,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/flash_proc.c:240:6:UAV_Write_Param_Motor",
+        "bytes": 392,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/kalman3.c:240:6:KalmanUpdate",
+        "bytes": 336,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/LevenbergMarquardt.c:21:6:LevenbergMarquardt",
+        "bytes": 328,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/kalman3.c:171:6:Kalman_Fil_Calc",
+        "bytes": 320,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/app/startup.c:31:6:app_tasks_init",
+        "bytes": 296,
+        "classification": "static"
+      },
+      {
+        "function": "C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/kalman3.c:139:6:Kalman_Fil_Init",
+        "bytes": 256,
+        "classification": "static"
+      }
+    ],
+    "elf_sha256": "4b18e435d3aad022a4863509e8736b2628c27e34557b299f280fce4129208e53"
+  },
+  "host_tests": "PASS",
+  "OpenOCD_config_parse_and_flash_command_generation": "PASS; no probe initialization or flash performed",
+  "hardware": "PENDING; see ACCEPTANCE.md"
+}

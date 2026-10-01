@@ -1,0 +1,1 @@
+[0/1] cmd.exe /C "cd /D C:\Users\20493\Desktop\xingxuan-uav\build\debug && C:\Users\20493\Desktop\embedded-tools\xpack-openocd-0.12.0-7\bin\openocd.exe -f C:/Users/20493/Desktop/xingxuan-uav/openocd/board.cfg -c "program C:/Users/20493/Desktop/xingxuan-uav/build/debug/xingxuan_uav.elf verify reset exit""

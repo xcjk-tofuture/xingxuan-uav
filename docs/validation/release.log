@@ -1,0 +1,442 @@
+[1/1] Cleaning all built files...
+Cleaning... 95 files.
+[1/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/app/failure.c.obj
+[2/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/os/failure_hooks.c.obj
+[3/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/platform/stm32/sensor_port.c.obj
+[4/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/drivers/storage/w25qxx.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/firmware/drivers/storage/w25qxx.c: In function 'W25QXX_ReadCapacity':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/drivers/storage/w25qxx.c:98:19: warning: comparison of integer expressions of different signedness: 'int' and 'unsigned int' [-Wsign-compare]
+   98 |     for (i = 0; i < sizeof(arr); i++) {
+      |                   ^
+[5/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/platform/stm32/emergency_stop.c.obj
+[6/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/platform/stm32/flash_port.c.obj
+[7/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/platform/stm32/display_port.c.obj
+[8/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/drivers/display/oled.c.obj
+[9/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/os/spi1_mutex.c.obj
+[10/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/app/tasks/log_task.c.obj
+[11/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/os/log_queue.c.obj
+[12/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/platform/stm32/log_port.c.obj
+[13/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/platform/stm32/uav_pwm_hal.c.obj
+[14/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/drivers/sensors/src/AK8975.c.obj
+[15/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/drivers/sensors/src/BMI088_1.c.obj
+[16/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/dma.c.obj
+[17/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/drivers/sensors/src/SPL06.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/firmware/drivers/sensors/src/SPL06.c: In function 'SPl0601GetCalibrationParam':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/drivers/sensors/src/SPL06.c:181:40: warning: operand of '?:' changes signedness from 'int32_t' {aka 'long int'} to 'long unsigned int' due to unsignedness of other operand [-Wsign-compare]
+  181 |                                      : p_spl0601->calib_param.c00;
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/drivers/sensors/src/SPL06.c:188:40: warning: operand of '?:' changes signedness from 'int32_t' {aka 'long int'} to 'long unsigned int' due to unsignedness of other operand [-Wsign-compare]
+  188 |                                      : p_spl0601->calib_param.c10;
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/drivers/sensors/src/SPL06.c: In function 'SPl0601GetRawTemp':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/drivers/sensors/src/SPL06.c:243:42: warning: operand of '?:' changes signedness from 'int32_t' {aka 'long int'} to 'long unsigned int' due to unsignedness of other operand [-Wsign-compare]
+  243 |                                        : p_spl0601->i32rawTemperature;
+      |                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/drivers/sensors/src/SPL06.c: In function 'SPl0601GetRawPressure':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/drivers/sensors/src/SPL06.c:261:39: warning: operand of '?:' changes signedness from 'int32_t' {aka 'long int'} to 'long unsigned int' due to unsignedness of other operand [-Wsign-compare]
+  261 |                                     : p_spl0601->i32rawPressure;
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~
+[18/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/freertos.c.obj
+[19/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/gpio.c.obj
+[20/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/i2c.c.obj
+[21/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/main.c.obj
+[22/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/stm32f4xx_hal_msp.c.obj
+[23/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/stm32f4xx_hal_timebase_tim.c.obj
+[24/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/spi.c.obj
+[25/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/stm32f4xx_it.c.obj
+[26/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/system_stm32f4xx.c.obj
+[27/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/usart.c.obj
+[28/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/tim.c.obj
+[29/95] Building C object CMakeFiles/xingxuan_uav.dir/Core/Src/usb_otg.c.obj
+[30/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c.obj
+[31/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c.obj
+[32/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c.obj
+[33/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c: In function 'HAL_EXTI_GetPending':
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c:467:66: warning: unused parameter 'Edge' [-Wunused-parameter]
+  467 | uint32_t HAL_EXTI_GetPending(EXTI_HandleTypeDef *hexti, uint32_t Edge)
+      |                                                         ~~~~~~~~~^~~~
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c: In function 'HAL_EXTI_ClearPending':
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c:496:64: warning: unused parameter 'Edge' [-Wunused-parameter]
+  496 | void HAL_EXTI_ClearPending(EXTI_HandleTypeDef *hexti, uint32_t Edge)
+      |                                                       ~~~~~~~~~^~~~
+[34/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c.obj
+[35/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c.obj
+[36/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c.obj
+[37/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c: In function 'FLASH_MassErase':
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c:953:60: warning: unused parameter 'Banks' [-Wunused-parameter]
+  953 | static void FLASH_MassErase(uint8_t VoltageRange, uint32_t Banks)
+      |                                                   ~~~~~~~~~^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c: In function 'FLASH_OB_EnableWRP':
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c:1032:74: warning: unused parameter 'Banks' [-Wunused-parameter]
+ 1032 | static HAL_StatusTypeDef FLASH_OB_EnableWRP(uint32_t WRPSector, uint32_t Banks)
+      |                                                                 ~~~~~~~~~^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c: In function 'FLASH_OB_DisableWRP':
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c:1068:75: warning: unused parameter 'Banks' [-Wunused-parameter]
+ 1068 | static HAL_StatusTypeDef FLASH_OB_DisableWRP(uint32_t WRPSector, uint32_t Banks)
+      |                                                                  ~~~~~~~~~^~~~~
+[38/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c.obj
+[39/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c.obj
+[40/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c: In function 'HAL_PWR_EnterSLEEPMode':
+C:/Users/20493/Desktop/xingxuan-uav/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c:381:38: warning: unused parameter 'Regulator' [-Wunused-parameter]
+  381 | void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SLEEPEntry)
+      |                             ~~~~~~~~~^~~~~~~~~
+[41/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_hcd.c.obj
+[42/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c.obj
+[43/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c.obj
+[44/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c.obj
+[45/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c.obj
+[46/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c.obj
+[47/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c.obj
+[48/95] Building C object CMakeFiles/xingxuan_uav.dir/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c.obj
+[49/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c.obj
+[50/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c.obj
+[51/95] Building C object CMakeFiles/xingxuan_uav.dir/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c.obj
+[52/95] Building C object CMakeFiles/xingxuan_uav.dir/Middlewares/Third_Party/FreeRTOS/Source/croutine.c.obj
+[53/95] Building C object CMakeFiles/xingxuan_uav.dir/Middlewares/Third_Party/FreeRTOS/Source/list.c.obj
+[54/95] Building C object CMakeFiles/xingxuan_uav.dir/Middlewares/Third_Party/FreeRTOS/Source/event_groups.c.obj
+[55/95] Building C object CMakeFiles/xingxuan_uav.dir/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c.obj
+[56/95] Building C object CMakeFiles/xingxuan_uav.dir/Middlewares/Third_Party/FreeRTOS/Source/queue.c.obj
+[57/95] Building C object CMakeFiles/xingxuan_uav.dir/Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c.obj
+[58/95] Building C object CMakeFiles/xingxuan_uav.dir/Middlewares/Third_Party/FreeRTOS/Source/timers.c.obj
+[59/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/attitude/attitude.c.obj
+[60/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/LevenbergMarquardt.c.obj
+[61/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/adrc.c.obj
+[62/95] Building C object CMakeFiles/xingxuan_uav.dir/Middlewares/Third_Party/FreeRTOS/Source/tasks.c.obj
+[63/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/declination.c.obj
+[64/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/filter.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/filter.c:10:48: warning: missing braces around initializer [-Wmissing-braces]
+   10 | ButterParameter_t Butter_80HZ_Parameter_Acce = {
+      |                                                ^
+   11 |     // 200hz---80hz
+   12 |     1, 1.14298050254, 0.4128015980962, 0.638945525159, 1.277891050318, 0.638945525159};
+      |     {                                } {                                             }
+C:/Users/20493/Desktop/xingxuan-uav/firmware/algorithms/math/src/filter.c:46:47: warning: missing braces around initializer [-Wmissing-braces]
+   46 | ButterParameter_t Butter_5HZ_Parameter_Acce = {
+      |                                               ^
+   47 |     // 200hz---5hz
+   48 |     1, -1.778631777825, 0.8008026466657, 0.005542717210281, 0.01108543442056, 0.005542717210281};
+      |     {                                  } {                                                     }
+[65/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/lowPassFilter.c.obj
+[66/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/kalmanVel.c.obj
+[67/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/kalman3.c.obj
+[68/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/matrix3.c.obj
+[69/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/mathTool.c.obj
+[70/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/matrix6.c.obj
+[71/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/pid.c.obj
+[72/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/quaternion.c.obj
+[73/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/rotation.c.obj
+[74/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/algorithms/math/src/vector3.c.obj
+[75/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/drivers/motor/uav_actuator.c.obj
+[76/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/app/startup.c.obj
+[77/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/app/tasks/serial_task.c.obj
+[78/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/os/flight_snapshot.c.obj
+[79/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/os/ports/freertos-10.3.1/GCC/ARM_CM4F/port.c.obj
+[80/95] Building ASM object CMakeFiles/xingxuan_uav.dir/firmware/platform/stm32/startup_stm32f407xx.S.obj
+[81/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/platform/stm32/platform_time.c.obj
+[82/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/platform/stm32/serial_port.c.obj
+[83/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/services/legacy/src/flow_proc.c.obj
+[84/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/services/legacy/src/key_proc.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/key_proc.c: In function 'Key_Task_Proc':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/key_proc.c:14:8: warning: unused variable 'keyLongFlag' [-Wunused-variable]
+   14 |     u8 keyLongFlag = 0;
+      |        ^~~~~~~~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/key_proc.c:11:32: warning: unused parameter 'argument' [-Wunused-parameter]
+   11 | void Key_Task_Proc(void const *argument) {
+      |                    ~~~~~~~~~~~~^~~~~~~~
+[85/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/services/legacy/src/flash_proc.c.obj
+[86/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/services/legacy/src/AHRS.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c: In function 'Sensor_Data_Task_Proc':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:73:40: warning: unused parameter 'argument' [-Wunused-parameter]
+   73 | void Sensor_Data_Task_Proc(void const *argument) {
+      |                            ~~~~~~~~~~~~^~~~~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c: In function 'Acc_LMS_Calibration':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:315:57: warning: unused parameter 'offset' [-Wunused-parameter]
+  315 | void Acc_LMS_Calibration(_imuData_all *imu, Vector3f_t *offset,
+      |                                             ~~~~~~~~~~~~^~~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:316:38: warning: unused parameter 'scale' [-Wunused-parameter]
+  316 |                          Vector3f_t *scale) // 传感器广义椭球校准
+      |                          ~~~~~~~~~~~~^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c: In function 'IMU_Update':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:462:16: warning: unused variable 'LPF2_MAG_Data' [-Wunused-variable]
+  462 |     Vector3f_t LPF2_MAG_Data;
+      |                ^~~~~~~~~~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:461:25: warning: unused variable 'LPF2_MAG' [-Wunused-variable]
+  461 |     static LPF2ndData_t LPF2_MAG;
+      |                         ^~~~~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c: In function 'AHRS_Kalman_Update':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:543:21: warning: unused variable 'mZz' [-Wunused-variable]
+  543 |     float mZx, mZy, mZz = 0;
+      |                     ^~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c: In function 'Cold_Start_ARHS':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:664:12: warning: unused variable 'cos_y' [-Wunused-variable]
+  664 |     double cos_y = cos(half_yaw);
+      |            ^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:663:12: warning: unused variable 'sin_y' [-Wunused-variable]
+  663 |     double sin_y = sin(half_yaw);
+      |            ^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:662:12: warning: unused variable 'cos_p' [-Wunused-variable]
+  662 |     double cos_p = cos(half_pitch);
+      |            ^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:661:12: warning: unused variable 'sin_p' [-Wunused-variable]
+  661 |     double sin_p = sin(half_pitch);
+      |            ^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:660:12: warning: unused variable 'cos_r' [-Wunused-variable]
+  660 |     double cos_r = cos(half_roll);
+      |            ^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:659:12: warning: unused variable 'sin_r' [-Wunused-variable]
+  659 |     double sin_r = sin(half_roll);
+      |            ^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:638:21: warning: unused variable 'mZz' [-Wunused-variable]
+  638 |     float mZx, mZy, mZz = 0;
+      |                     ^~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:632:11: warning: unused variable 'gz' [-Wunused-variable]
+  632 |     float gz = imu.gyro.yaw;
+      |           ^~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:631:11: warning: unused variable 'gy' [-Wunused-variable]
+  631 |     float gy = imu.gyro.pitch;
+      |           ^~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/AHRS.c:630:11: warning: unused variable 'gx' [-Wunused-variable]
+  630 |     float gx = imu.gyro.roll;
+      |           ^~
+[87/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/services/legacy/src/led_proc.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c: In function 'RGB_Task_Proc':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c:12:32: warning: unused parameter 'argument' [-Wunused-parameter]
+   12 | void RGB_Task_Proc(void const *argument) // RGB进程主程序
+      |                    ~~~~~~~~~~~~^~~~~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c: In function 'RGB_Calibration':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c:39:25: warning: unused parameter 'ucled' [-Wunused-parameter]
+   39 | void RGB_Calibration(u8 ucled) {
+      |                      ~~~^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c: In function 'RGB_Normal':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c:46:20: warning: unused parameter 'ucled' [-Wunused-parameter]
+   46 | void RGB_Normal(u8 ucled) {
+      |                 ~~~^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c: In function 'RGB_Emergency':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c:56:23: warning: unused parameter 'ucled' [-Wunused-parameter]
+   56 | void RGB_Emergency(u8 ucled) {
+      |                    ~~~^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c: In function 'RGB_Unlocked':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c:64:22: warning: unused parameter 'ucled' [-Wunused-parameter]
+   64 | void RGB_Unlocked(u8 ucled) {
+      |                   ~~~^~~~~
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c: In function 'RGB_Flying':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/led_proc.c:73:20: warning: unused parameter 'ucled' [-Wunused-parameter]
+   73 | void RGB_Flying(u8 ucled) {
+      |                 ~~~^~~~~
+[88/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/services/legacy/src/oledfont.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/oledfont.c:10:33: warning: missing braces around initializer [-Wmissing-braces]
+   10 | const unsigned char F6x8[][6] = {
+      |                                 ^
+   11 |     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // sp
+      |     {                                 }
+   12 |     0x00, 0x00, 0x00, 0x2f, 0x00, 0x00, // !
+      |     {                                 }
+   13 |     0x00, 0x00, 0x07, 0x00, 0x07, 0x00, // "
+      |     {                                 }
+   14 |     0x00, 0x14, 0x7f, 0x14, 0x7f, 0x14, // #
+      |     {                                 }
+   15 |     0x00, 0x24, 0x2a, 0x7f, 0x2a, 0x12, // $
+      |     {                                 }
+   16 |     0x00, 0x62, 0x64, 0x08, 0x13, 0x23, // %
+      |     {                                 }
+   17 |     0x00, 0x36, 0x49, 0x55, 0x22, 0x50, // &
+      |     {                                 }
+   18 |     0x00, 0x00, 0x05, 0x03, 0x00, 0x00, // '
+      |     {                                 }
+   19 |     0x00, 0x00, 0x1c, 0x22, 0x41, 0x00, // (
+      |     {                                 }
+   20 |     0x00, 0x00, 0x41, 0x22, 0x1c, 0x00, // )
+      |     {                                 }
+   21 |     0x00, 0x14, 0x08, 0x3E, 0x08, 0x14, // *
+      |     {                                 }
+   22 |     0x00, 0x08, 0x08, 0x3E, 0x08, 0x08, // +
+      |     {                                 }
+   23 |     0x00, 0x00, 0x00, 0xA0, 0x60, 0x00, // ,
+      |     {                                 }
+   24 |     0x00, 0x08, 0x08, 0x08, 0x08, 0x08, // -
+      |     {                                 }
+   25 |     0x00, 0x00, 0x60, 0x60, 0x00, 0x00, // .
+      |     {                                 }
+   26 |     0x00, 0x20, 0x10, 0x08, 0x04, 0x02, // /
+      |     {                                 }
+   27 |     0x00, 0x3E, 0x51, 0x49, 0x45, 0x3E, // 0
+      |     {                                 }
+   28 |     0x00, 0x00, 0x42, 0x7F, 0x40, 0x00, // 1
+      |     {                                 }
+   29 |     0x00, 0x42, 0x61, 0x51, 0x49, 0x46, // 2
+      |     {                                 }
+   30 |     0x00, 0x21, 0x41, 0x45, 0x4B, 0x31, // 3
+      |     {                                 }
+   31 |     0x00, 0x18, 0x14, 0x12, 0x7F, 0x10, // 4
+      |     {                                 }
+   32 |     0x00, 0x27, 0x45, 0x45, 0x45, 0x39, // 5
+      |     {                                 }
+   33 |     0x00, 0x3C, 0x4A, 0x49, 0x49, 0x30, // 6
+      |     {                                 }
+   34 |     0x00, 0x01, 0x71, 0x09, 0x05, 0x03, // 7
+      |     {                                 }
+   35 |     0x00, 0x36, 0x49, 0x49, 0x49, 0x36, // 8
+      |     {                                 }
+   36 |     0x00, 0x06, 0x49, 0x49, 0x29, 0x1E, // 9
+      |     {                                 }
+   37 |     0x00, 0x00, 0x36, 0x36, 0x00, 0x00, // :
+      |     {                                 }
+   38 |     0x00, 0x00, 0x56, 0x36, 0x00, 0x00, // ;
+      |     {                                 }
+   39 |     0x00, 0x08, 0x14, 0x22, 0x41, 0x00, // <
+      |     {                                 }
+   40 |     0x00, 0x14, 0x14, 0x14, 0x14, 0x14, // =
+      |     {                                 }
+   41 |     0x00, 0x00, 0x41, 0x22, 0x14, 0x08, // >
+      |     {                                 }
+   42 |     0x00, 0x02, 0x01, 0x51, 0x09, 0x06, // ?
+      |     {                                 }
+   43 |     0x00, 0x32, 0x49, 0x59, 0x51, 0x3E, // @
+      |     {                                 }
+   44 |     0x00, 0x7C, 0x12, 0x11, 0x12, 0x7C, // A
+      |     {                                 }
+   45 |     0x00, 0x7F, 0x49, 0x49, 0x49, 0x36, // B
+      |     {                                 }
+   46 |     0x00, 0x3E, 0x41, 0x41, 0x41, 0x22, // C
+      |     {                                 }
+   47 |     0x00, 0x7F, 0x41, 0x41, 0x22, 0x1C, // D
+      |     {                                 }
+   48 |     0x00, 0x7F, 0x49, 0x49, 0x49, 0x41, // E
+      |     {                                 }
+   49 |     0x00, 0x7F, 0x09, 0x09, 0x09, 0x01, // F
+      |     {                                 }
+   50 |     0x00, 0x3E, 0x41, 0x49, 0x49, 0x7A, // G
+      |     {                                 }
+   51 |     0x00, 0x7F, 0x08, 0x08, 0x08, 0x7F, // H
+      |     {                                 }
+   52 |     0x00, 0x00, 0x41, 0x7F, 0x41, 0x00, // I
+      |     {                                 }
+   53 |     0x00, 0x20, 0x40, 0x41, 0x3F, 0x01, // J
+      |     {                                 }
+   54 |     0x00, 0x7F, 0x08, 0x14, 0x22, 0x41, // K
+      |     {                                 }
+   55 |     0x00, 0x7F, 0x40, 0x40, 0x40, 0x40, // L
+      |     {                                 }
+   56 |     0x00, 0x7F, 0x02, 0x0C, 0x02, 0x7F, // M
+      |     {                                 }
+   57 |     0x00, 0x7F, 0x04, 0x08, 0x10, 0x7F, // N
+      |     {                                 }
+   58 |     0x00, 0x3E, 0x41, 0x41, 0x41, 0x3E, // O
+      |     {                                 }
+   59 |     0x00, 0x7F, 0x09, 0x09, 0x09, 0x06, // P
+      |     {                                 }
+   60 |     0x00, 0x3E, 0x41, 0x51, 0x21, 0x5E, // Q
+      |     {                                 }
+   61 |     0x00, 0x7F, 0x09, 0x19, 0x29, 0x46, // R
+      |     {                                 }
+   62 |     0x00, 0x46, 0x49, 0x49, 0x49, 0x31, // S
+      |     {                                 }
+   63 |     0x00, 0x01, 0x01, 0x7F, 0x01, 0x01, // T
+      |     {                                 }
+   64 |     0x00, 0x3F, 0x40, 0x40, 0x40, 0x3F, // U
+      |     {                                 }
+   65 |     0x00, 0x1F, 0x20, 0x40, 0x20, 0x1F, // V
+      |     {                                 }
+   66 |     0x00, 0x3F, 0x40, 0x38, 0x40, 0x3F, // W
+      |     {                                 }
+   67 |     0x00, 0x63, 0x14, 0x08, 0x14, 0x63, // X
+      |     {                                 }
+   68 |     0x00, 0x07, 0x08, 0x70, 0x08, 0x07, // Y
+      |     {                                 }
+   69 |     0x00, 0x61, 0x51, 0x49, 0x45, 0x43, // Z
+      |     {                                 }
+   70 |     0x00, 0x00, 0x7F, 0x41, 0x41, 0x00, // [
+      |     {                                 }
+   71 |     0x00, 0x55, 0x2A, 0x55, 0x2A, 0x55, // 55
+      |     {                                 }
+   72 |     0x00, 0x00, 0x41, 0x41, 0x7F, 0x00, // ]
+      |     {                                 }
+   73 |     0x00, 0x04, 0x02, 0x01, 0x02, 0x04, // ^
+      |     {                                 }
+   74 |     0x00, 0x40, 0x40, 0x40, 0x40, 0x40, // _
+      |     {                                 }
+   75 |     0x00, 0x00, 0x01, 0x02, 0x04, 0x00, // '
+      |     {                                 }
+   76 |     0x00, 0x20, 0x54, 0x54, 0x54, 0x78, // a
+      |     {                                 }
+   77 |     0x00, 0x7F, 0x48, 0x44, 0x44, 0x38, // b
+      |     {                                 }
+   78 |     0x00, 0x38, 0x44, 0x44, 0x44, 0x20, // c
+      |     {                                 }
+   79 |     0x00, 0x38, 0x44, 0x44, 0x48, 0x7F, // d
+      |     {                                 }
+   80 |     0x00, 0x38, 0x54, 0x54, 0x54, 0x18, // e
+      |     {                                 }
+   81 |     0x00, 0x08, 0x7E, 0x09, 0x01, 0x02, // f
+      |     {                                 }
+   82 |     0x00, 0x18, 0xA4, 0xA4, 0xA4, 0x7C, // g
+      |     {                                 }
+   83 |     0x00, 0x7F, 0x08, 0x04, 0x04, 0x78, // h
+      |     {                                 }
+   84 |     0x00, 0x00, 0x44, 0x7D, 0x40, 0x00, // i
+      |     {                                 }
+   85 |     0x00, 0x40, 0x80, 0x84, 0x7D, 0x00, // j
+      |     {                                 }
+   86 |     0x00, 0x7F, 0x10, 0x28, 0x44, 0x00, // k
+      |     {                                 }
+   87 |     0x00, 0x00, 0x41, 0x7F, 0x40, 0x00, // l
+      |     {                                 }
+   88 |     0x00, 0x7C, 0x04, 0x18, 0x04, 0x78, // m
+      |     {                                 }
+   89 |     0x00, 0x7C, 0x08, 0x04, 0x04, 0x78, // n
+      |     {                                 }
+   90 |     0x00, 0x38, 0x44, 0x44, 0x44, 0x38, // o
+      |     {                                 }
+   91 |     0x00, 0xFC, 0x24, 0x24, 0x24, 0x18, // p
+      |     {                                 }
+   92 |     0x00, 0x18, 0x24, 0x24, 0x18, 0xFC, // q
+      |     {                                 }
+   93 |     0x00, 0x7C, 0x08, 0x04, 0x04, 0x08, // r
+      |     {                                 }
+   94 |     0x00, 0x48, 0x54, 0x54, 0x54, 0x20, // s
+      |     {                                 }
+   95 |     0x00, 0x04, 0x3F, 0x44, 0x40, 0x20, // t
+      |     {                                 }
+   96 |     0x00, 0x3C, 0x40, 0x40, 0x20, 0x7C, // u
+      |     {                                 }
+   97 |     0x00, 0x1C, 0x20, 0x40, 0x20, 0x1C, // v
+      |     {                                 }
+   98 |     0x00, 0x3C, 0x40, 0x30, 0x40, 0x3C, // w
+      |     {                                 }
+   99 |     0x00, 0x44, 0x28, 0x10, 0x28, 0x44, // x
+      |     {                                 }
+  100 |     0x00, 0x1C, 0xA0, 0xA0, 0xA0, 0x7C, // y
+      |     {                                 }
+  101 |     0x00, 0x44, 0x64, 0x54, 0x4C, 0x44, // z
+      |     {                                 }
+  102 |     0x14, 0x14, 0x14, 0x14, 0x14, 0x14, // horiz lines
+      |     {
+  103 | };
+      | }
+[89/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/app/tasks/flight_control_task.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/firmware/app/tasks/flight_control_task.c: In function 'Motor_Task_Proc':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/app/tasks/flight_control_task.c:27:34: warning: unused parameter 'argument' [-Wunused-parameter]
+   27 | void Motor_Task_Proc(void const *argument) {
+      |                      ~~~~~~~~~~~~^~~~~~~~
+[90/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/services/legacy/src/oled_proc.c.obj
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/oled_proc.c: In function 'OLED_Task_Proc':
+C:/Users/20493/Desktop/xingxuan-uav/firmware/services/legacy/src/oled_proc.c:57:33: warning: unused parameter 'argument' [-Wunused-parameter]
+   57 | void OLED_Task_Proc(void const *argument) // OLED进程主程序
+      |                     ~~~~~~~~~~~~^~~~~~~~
+[91/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/services/protocol/star_dispatch.c.obj
+[92/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/services/protocol/star_protocol.c.obj
+[93/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/services/legacy/src/sbus_proc.c.obj
+[94/95] Building C object CMakeFiles/xingxuan_uav.dir/firmware/platform/syscalls.c.obj
+[95/95] Linking C executable xingxuan_uav.elf
+C:/Users/20493/Desktop/embedded-tools/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: xingxuan_uav.elf: section `.data' can't be allocated in segment 0
+LOAD: .isr_vector .text .ARM.exidx .init_array .fini_array .data
+C:/Users/20493/Desktop/embedded-tools/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: xingxuan_uav.elf: section .heap lma 0x550584080108c8 adjusted to 0x55058f00000000
+C:/Users/20493/Desktop/embedded-tools/arm-gnu-toolchain-13.3.rel1-mingw-w64-i686-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/13.3.1/../../../../arm-none-eabi/bin/ld.exe: xingxuan_uav.elf: section .stack lma 0x550584080108c8 adjusted to 0x55058f00000000
+Memory region         Used Size  Region Size  %age Used
+           FLASH:       67784 B       512 KB     12.93%
+             RAM:       43408 B       128 KB     33.12%
+   text	   data	    bss	    dec	    hex	filename
+  67284	    492	  42924	 110700	  1b06c	C:/Users/20493/Desktop/xingxuan-uav/build/release/xingxuan_uav.elf

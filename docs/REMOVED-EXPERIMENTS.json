@@ -1,9 +1,0 @@
-[
-  "firmware/services/legacy/src/buzzer_proc.c",
-  "firmware/services/legacy/inc/buzzer_proc.h",
-  "firmware/services/legacy/inc/uart3_ble_proc.h",
-  "firmware/services/legacy/src/bmi088_proc.c",
-  "firmware/services/legacy/inc/bmi088_proc.h",
-  "firmware/drivers/sensors/src/BMI088.c",
-  "firmware/drivers/sensors/inc/BMI088.h"
-]

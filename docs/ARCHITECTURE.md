@@ -1,19 +1,25 @@
-# 架构与模块接口
+# StarFlight（StarFlight）架构
 
-```mermaid
-flowchart TD
-    A[app: 状态机与启动编排] --> S[services: 控制/采集/通信/显示/参数]
-    S --> G[algorithms: 调用者持有算法上下文]
-    S --> D[drivers: 设备接口]
-    D --> P[platform: 芯片与总线适配]
-    P --> V[厂商 SDK/硬件]
-    A --> B[boards: 资源与参数]
-    A --> O[os: 任务/队列/互斥/快照]
-    S --> O
-```
+入口：`firmware/platform/stm32/startup_stm32f407xx.S: Reset_Handler` → `Core/Src/main.c: main` → `MX_FREERTOS_Init` → `firmware/app/startup.c: app_tasks_init` → `osKernelStart`。
+`APP_RTOS_EXTERNAL_TASKS=1` 排除生成模板中的旧任务，实际创建配置以 `startup.c` 为准。
 
-公共算法与协议接口只有标准 C 数据类型，算法不包含 HAL/RTOS/业务主头文件。任务拥有运行状态；通信提交命令，显示与遥测读取快照。旧设备实现保留源头注释；legacy 表示保留接口命名的适配区，不允许新增跨模块可写 extern 状态。头文件包含循环已检查；这不等于证明所有运行时依赖或调用时序。
+`Core/Drivers/Middlewares/.ioc` 保持 CubeMX 结构。手写代码位于 `firmware/app/services/algorithms/drivers/platform/boards/os`，分别负责业务与任务、服务、独立计算、设备、芯片适配、板级资源和必要同步。
+CubeMX 开启 Keep User Code，重新生成后核查初始化桥接、DMA 回调、内核配置、时基和 CMake 源清单，完整构建后再上板。
 
-协议回调中的帧借用仅在同步调用内有效，异步处理必须复制。控制命令按值入队且不阻塞，队列满返回 busy；原始 UART 接收队列丢包后重置解码器，目标速度受 500ms 超时保护。任务快照用短临界区复制，临界区里不进行 I/O、计算或等待。设备接口按各头文件约定调用上下文、单位与返回值；初始化在启动编排中检查创建结果。
+传感器 → `Sensor_Data_Task_Proc` → 数据处理/独立姿态算法 → 姿态快照 → `Motor_Task_Proc` → 控制/PWM。SBUS 任务发布遥控快照，控制入口判定运行状态；显示和存储与控制任务分开。独立状态机、诊断及带校验双副本标定记录位于 `dev`，未纳入此基线。
 
-malloc/栈溢出/断言/致命设备错误进入停止输出并锁定的故障路径；恢复要求复位与重新初始化。现有工程没有已验证的硬件看门狗恢复，不能宣称自动恢复或自动重新解锁。看门狗接线、超时、复位原因记录和启动回归列入硬件验收。
+## 任务与资源所有权
+
+| 任务 | 优先级 | 配置栈 | 周期/等待 | 资源与失败策略 |
+|---|---|---|---|---|
+| Sensor | Realtime | 768 words | 1ms 基准、2ms读取惯性量、5ms解算、20ms磁场 | SPI2独占、算法上下文、标定与姿态快照；过期不补算积分 |
+| Control | High | 512 words | 5ms固定周期 | 飞行状态、PID/混控；失联/姿态旧于100ms停止 |
+| SBUS | AboveNormal | 256 words | 队列事件，100ms失联判定 | UART6 RX4×25，校准通道快照 |
+| PC | Normal | 768 words | RX事件/5ms超时检查，遥测20–1000ms | UART1，RX4×100；仅查询姿态，不远程解锁 |
+| OLED | Idle | 256 words | 100ms | UI/页面、屏幕；SPI1互斥保护每次CS事务 |
+| Storage | Idle | 768 words | 写请求事件 | 队列2个按值副本；原标定存储；独占4K scratch，busy超时5s |
+| Flow | Idle | 128 words | 队列事件，100ms旧数据失效 | RX4×14；ISR不解析，不计算浮点 |
+| Key/RGB | Idle | 各128 words | 5ms按键/低速LED | 只提交标定与页面请求 |
+| Log | Idle | 128 words | 队列事件/批量64字节 | UART3，256字节；TX≤20ms，满则丢日志 |
+
+配置栈为 FreeRTOS 的 32 位项数，不是实测余量。厂商 SDK/内核保持原版；GCC 使用匹配内核端口。具体版本见 SOURCES.md。

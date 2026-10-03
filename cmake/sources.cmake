@@ -1,4 +1,5 @@
 set(FIRMWARE_SOURCES
+  firmware/algorithms/calibration/gyro_calibration.c
   firmware/app/flight_machine.c
   firmware/services/parameters/calibration_record.c
   firmware/services/parameters/param_journal.c
@@ -98,6 +99,7 @@ set(FIRMWARE_SOURCES
   firmware/platform/syscalls.c
 )
 set(FIRMWARE_INCLUDES
+  firmware/algorithms/calibration
   firmware/services/parameters
   firmware/drivers/storage
   firmware/drivers/display
